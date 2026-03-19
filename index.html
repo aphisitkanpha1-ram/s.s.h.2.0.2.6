@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Space Hackathon 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================
+           Design System & Variables (Locked)
+        ========================================= */
+        :root {
+            --space-black: #010103;     
+            --space-dark: #0B001A;      
+            --space-mid: #250A43;       
+            --lavender-dark: #6D4C9E;   
+            --lavender-light: #E0B0FF;
+            --pink-star: #FFB7D5;       
+            --pink-neon: #FF66A3;
+            
+            --gold-light: #FDE047;      
+            --gold-dark: #F59E0B;
+            
+            --text-main: #F4EFFF;
+            --text-muted: #BFA8E0;
+            --glass-bg: rgba(37, 10, 67, 0.45);
+            --glass-border: rgba(224, 176, 255, 0.2);
+
+            /* New User Variables */
+            --bg-dark: #030305; 
+            --accent-glow: #8b5cf6;
+        }
+
+        body {
+            /* Locked: Nebula Background */
+            background-color: var(--space-black);
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(37, 10, 67, 0.8) 0px, transparent 50%),
+                radial-gradient(at 90% 20%, rgba(109, 76, 158, 0.5) 0px, transparent 40%),
+                radial-gradient(at 50% 50%, rgba(37, 10, 67, 0.6) 0px, transparent 60%),
+                radial-gradient(at 80% 80%, rgba(109, 76, 158, 0.4) 0px, transparent 50%),
+                radial-gradient(at 20% 90%, rgba(37, 10, 67, 0.7) 0px, transparent 40%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Kanit', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+            scroll-behavior: smooth;
+        }
+
+        /* =========================================
+           Stars & Smooth Comets (Updated by User)
+        ========================================= */
+        .stars-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+                radial-gradient(1px 1px at 30% 65%, #fff, transparent),
+                radial-gradient(2px 2px at 50% 35%, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 70% 80%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 90% 10%, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 80% 50%, #fff, transparent);
+            background-size: 200px 200px;
+            z-index: -4;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .comet { 
+            position: fixed; 
+            width: 150px; 
+            height: 2px; 
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); 
+            z-index: -2; 
+            opacity: 0; 
+            transform: rotate(-45deg); 
+            animation: shoot 8s linear infinite; 
+            pointer-events: none;
+        }
+        
+        .comet-1 { top: 20%; left: 80%; animation-delay: 2s; }
+        .comet-2 { top: 60%; left: 30%; width: 100px; animation-duration: 12s; animation-delay: 7s; }
+        /* Added a few more variations to keep the sky alive */
+        .comet-3 { top: 5%; left: 60%; width: 120px; animation-duration: 10s; animation-delay: 0s; background: linear-gradient(90deg, transparent, var(--pink-star), transparent); }
+        .comet-4 { top: 40%; left: 90%; width: 80px; animation-duration: 15s; animation-delay: 4s; }
+
+        @keyframes shoot { 
+            0% { transform: translateX(0) translateY(0) rotate(-20deg); opacity: 0; } 
+            10% { opacity: 1; } 
+            20% { transform: translateX(-800px) translateY(300px) rotate(-20deg); opacity: 0; } 
+            100% { transform: translateX(-800px) translateY(300px) rotate(-20deg); opacity: 0; } 
+        }
+
+        /* =========================================
+           Custom Utilities (From User)
+        ========================================= */
+        .custom-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 120px 20px 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .blink {
+            animation: blinker 3s linear infinite;
+        }
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+
+        /* =========================================
+           Glassmorphism & Components (Locked)
+        ========================================= */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(224, 176, 255, 0.15);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 40px;
+            background: linear-gradient(45deg, var(--lavender-dark), var(--pink-neon));
+            color: white;
+            font-weight: 500;
+            border-radius: 100px;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(255, 102, 163, 0.3);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 25px rgba(224, 176, 255, 0.5);
+        }
+        .btn-primary.glow-active {
+            animation: pulse-glow 1.5s infinite alternate;
+        }
+        @keyframes pulse-glow {
+            from { box-shadow: 0 0 10px var(--lavender-dark); }
+            to { box-shadow: 0 0 30px var(--pink-neon), 0 0 20px var(--lavender-light); }
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            padding: 16px 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--lavender-light);
+            font-weight: 500;
+            border-radius: 100px;
+            border: 1px solid var(--lavender-light);
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: rgba(224, 176, 255, 0.2);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* Tables & Typography */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        th, td {
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        th {
+            background: rgba(255, 255, 255, 0.08);
+            font-weight: 500;
+            color: var(--pink-star);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255, 255, 255, 0.1); }
+
+        .bullet-list { list-style: none; padding: 0; margin: 0; }
+        .bullet-item {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 16px;
+            line-height: 1.6;
+            font-size: 1.05rem;
+            color: var(--text-main);
+        }
+        .bullet-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            background: var(--pink-neon);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--pink-star);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* =========================================
+           Gamification Box (Locked)
+        ========================================= */
+        .inventory-box {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(37, 10, 67, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(224, 176, 255, 0.3);
+            border-radius: 50px;
+            padding: 10px 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.4s ease;
+            width: auto;
+            white-space: nowrap;
+        }
+        .inventory-box.complete {
+            background: linear-gradient(135deg, var(--space-mid), var(--lavender-dark));
+            border-color: var(--gold-light);
+            box-shadow: 0 0 30px rgba(253, 224, 71, 0.3);
+            transform: translateX(-50%) scale(1.05);
+        }
+        .inventory-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--lavender-light);
+            text-transform: uppercase;
+        }
+        .sticker-slots {
+            display: flex;
+            gap: 8px;
+        }
+        .slot {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            border: 1px dashed rgba(224, 176, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            opacity: 0.3;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .slot.unlocked {
+            opacity: 1;
+            border-style: solid;
+            border-color: var(--pink-star);
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: 0 0 10px rgba(224, 176, 255, 0.4);
+        }
+        
+        .reward-btn {
+            display: none;
+            background: var(--gold-dark);
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            box-shadow: 0 0 15px rgba(253, 224, 71, 0.5);
+            animation: fadeIn 1s ease forwards;
+        }
+        .inventory-box.complete .reward-btn {
+            display: inline-block;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* Popup Notification */
+        .sticker-popup {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translate(-50%, 20px);
+            background: var(--lavender-dark);
+            padding: 10px 24px;
+            border: 1px solid var(--lavender-light);
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            font-weight: 500;
+            color: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sticker-popup.show {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+
+        /* Music Player Button */
+        #music-btn {
+            animation: float-music 4s ease-in-out infinite;
+        }
+        @keyframes float-music {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; }
+            td { position: relative; padding-left: 40%; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            td::before {
+                position: absolute; top: 16px; left: 16px; width: 35%;
+                font-weight: 500; font-size: 0.85rem; color: var(--pink-star);
+            }
+            td:nth-of-type(1)::before { content: "กิจกรรม"; }
+            td:nth-of-type(2)::before { content: "วันที่ / เวลา"; }
+            td:nth-of-type(3)::before { content: "สถานที่"; }
+            
+            .inventory-box {
+                flex-direction: column;
+                padding: 12px 20px;
+                border-radius: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars-bg"></div>
+    <div class="comet comet-1"></div>
+    <div class="comet comet-2"></div>
+    <div class="comet comet-3"></div>
+    <div class="comet comet-4"></div>
+
+    <div id="music-btn" class="fixed bottom-6 left-6 z-50 glass-panel !rounded-full px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-white/10 transition border-pink-neon/30" onclick="toggleMusic()">
+        <div id="music-icon" class="w-8 h-8 rounded-full bg-pink-neon/20 flex items-center justify-center text-sm border border-pink-neon/50">▶️</div>
+        <div class="text-xs font-light text-white hidden md:block blink">BGM : Space Vibe</div>
+    </div>
+    <iframe id="bgm-player" class="hidden" src="https://www.youtube.com/embed/8iHB4KaehIA?enablejsapi=1&loop=1&playlist=8iHB4KaehIA" allow="autoplay"></iframe>
+
+    <div class="inventory-box" id="inventory">
+        <div class="flex items-center gap-4">
+            <div class="inventory-header" id="inventory-text">0/5</div>
+            <div class="sticker-slots">
+                <div class="slot" id="slot-1" title="Explorer Whale">🪐</div>
+                <div class="slot" id="slot-2" title="Time Whale">⏱️</div>
+                <div class="slot" id="slot-3" title="Winner Whale">🏆</div>
+                <div class="slot" id="slot-4" title="Guardian Whale">🛡️</div>
+                <div class="slot" id="slot-5" title="Galaxy Whale">🌌</div>
+            </div>
+        </div>
+        <a href="https://drive.google.com/drive/folders/1DbOPqMuR9cQpg9pPfja8slz5alXw05DQ?usp=drive_link" target="_blank" class="reward-btn" id="reward-link">
+            🎁 รับคลัง Element
+        </a>
+    </div>
+    <div class="sticker-popup" id="popup">
+        <span id="popup-icon">🐳</span> <span id="popup-msg">Unlocked!</span>
+    </div>
+
+    <nav class="fixed w-full top-0 z-50 glass-panel !rounded-none !border-x-0 !border-t-0 py-3 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="hidden md:flex gap-6 font-light text-sm text-text-muted">
+                <a href="#overview" class="hover:text-white transition">เกี่ยวกับ</a>
+                <a href="#timeline" class="hover:text-white transition">กำหนดการ</a>
+                <a href="#criteria" class="hover:text-white transition">คุณสมบัติ</a>
+                <a href="#rules" class="hover:text-white transition">กติกาเคร่งครัด</a>
+            </div>
+            
+            <div class="flex items-center gap-2 p-2 px-3 bg-white/95 backdrop-blur-sm rounded-full shadow-inner border border-white/20">
+                <img src="https://i.postimg.cc/NGRF4rTj/D9D2BEC5-6591-4AD5-82E1-1ED6E09F30EC.jpg" alt="KMITL Case Club" class="h-6 w-auto rounded">
+                <span class="text-xs text-space-dark/50 font-bold">x</span>
+                <img src="https://i.postimg.cc/fWdtrP49/Gemini-Generated-Image-8irjgs8irjgs8irj.png" alt="B-LAB" class="h-6 w-auto rounded">
+                <span class="text-xs text-space-dark/50 font-bold">x</span>
+                <img src="https://i.postimg.cc/441ZyvVb/bv12.png" alt="CareerVisa" class="h-6 w-auto rounded">
+            </div>
+        </div>
+    </nav>
+
+    <header class="min-h-[85vh] flex flex-col items-center justify-center pt-24 px-6 relative z-10">
+        <img src="https://i.postimg.cc/GhZLYLgT/Safe-Space-3.png" alt="Safe Space Logo" class="w-72 md:w-96 mb-8 drop-shadow-[0_0_30px_rgba(224,176,255,0.3)]">
+        
+        <div class="text-center max-w-4xl">
+            <p class="text-xl md:text-2xl mb-10 text-text-muted font-light leading-relaxed">
+                ร่วมค้นหานวัตกรรมสุขภาพจิต เพื่อสร้างสังคมที่อบอุ่น และรากฐานที่มั่นคง
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="#apply" class="btn-primary" id="main-cta">สมัครทันที</a>
+                <a href="https://drive.google.com/drive/folders/1DbOPqMuR9cQpg9pPfja8slz5alXw05DQ?usp=drive_link" target="_blank" class="btn-secondary">ดู Booklet กติกา (Prototype)</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-6xl mx-auto px-6 pb-40 space-y-16 md:space-y-24 mt-16 md:mt-24 relative z-10">
+        
+        <section id="overview" class="glass-panel p-8 md:p-12 reveal section-tracker" data-sticker="1" data-name="Explorer Whale" data-icon="🪐">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 rounded-full bg-lavender-dark/50 flex items-center justify-center text-2xl border border-lavender-light/30">💡</div>
+                <h2 class="text-2xl font-bold text-white">เฟ้นหาไอเดียแก้ปัญหาสุขภาพจิตในครอบครัว</h2>
+            </div>
+            <p class="text-lg leading-relaxed text-text-muted font-light">
+                การแข่งขันที่เปิดโอกาสให้เยาวชน และนักศึกษามาร่วมกันคิดค้น “แนวทางแก้ปัญหาสุขภาพจิตในครอบครัว” เพื่อลดปัญหาที่มีต้นเหตุมาจากสภาพแวดล้อมที่ไม่สมบูรณ์ เรามุ่งเน้นการหาแนวทางที่นำไปใช้ได้จริง ไม่จำกัดแค่เทคโนโลยี แต่เป็นวิธีที่สร้างการเปลี่ยนแปลงในระยะยาว
+            </p>
+        </section>
+
+        <section id="timeline" class="glass-panel p-8 md:p-12 reveal section-tracker" data-sticker="2" data-name="Time Whale" data-icon="⏱️">
+            <h2 class="text-2xl font-bold mb-6 text-white">กำหนดการสำคัญ</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>กิจกรรม</th>
+                        <th>วันที่ / เวลา</th>
+                        <th>สถานที่ / รูปแบบ</th>
+                    </tr>
+                </thead>
+                <tbody class="font-light text-text-main">
+                    <tr>
+                        <td><strong>เปิดรับสมัคร</strong></td>
+                        <td>1 ต.ค. - 31 ต.ค. 2569</td>
+                        <td class="text-text-muted">ช่องทางออนไลน์</td>
+                    </tr>
+                    <tr>
+                        <td>ประกาศผล 50 ทีม</td>
+                        <td>2 พ.ย. 2569</td>
+                        <td class="text-text-muted">ช่องทางออนไลน์</td>
+                    </tr>
+                    <tr>
+                        <td>ประกาศผล 20 ทีม</td>
+                        <td>5 พ.ย. 2569</td>
+                        <td class="text-text-muted">ช่องทางออนไลน์</td>
+                    </tr>
+                    <tr class="bg-lavender-dark/20 hover:bg-lavender-dark/30">
+                        <td class="text-pink-star"><strong>Bootcamp Day</strong></td>
+                        <td class="text-pink-neon font-medium">14 พ.ย. 2569</td>
+                        <td>KMITL (เงื่อนไขบังคับ)</td>
+                    </tr>
+                    <tr>
+                        <td>ประกาศผล 10 ทีม</td>
+                        <td>20 พ.ย. 2569</td>
+                        <td class="text-text-muted">ช่องทางออนไลน์</td>
+                    </tr>
+                    <tr>
+                        <td>Mentoring Session</td>
+                        <td>25 พ.ย. 2569</td>
+                        <td class="text-text-muted">Online Meeting</td>
+                    </tr>
+                    <tr class="bg-lavender-dark/20 hover:bg-lavender-dark/30">
+                        <td class="text-pink-star"><strong>Final Pitching Day</strong></td>
+                        <td class="text-pink-neon font-medium">30 พ.ย. 2569 <br><span class="text-sm font-light text-text-muted">(08:00 - 16:00 น.)</span></td>
+                        <td>KMITL Lifelong Learning Center</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <div id="criteria" class="grid grid-cols-1 md:grid-cols-2 gap-8 section-tracker reveal" data-sticker="3" data-name="Winner Whale" data-icon="🏆">
+            <section class="glass-panel p-8">
+                <h2 class="text-xl font-bold mb-6 text-white">คุณสมบัติ และการส่งงาน</h2>
+                <ul class="bullet-list font-light">
+                    <li class="bullet-item">อายุ <strong>15-23 ปี</strong> (นักเรียน/นักศึกษา)</li>
+                    <li class="bullet-item">สมัครเป็นทีม : <strong>3-4 คน</strong> (ต่างสถาบันได้)</li>
+                    <li class="bullet-item">ค่าสมัคร : <strong>500 บาท/ทีม</strong> (รับเกียรติบัตรทุกคน)</li>
+                    <li class="bullet-item">สไลด์ Presentation : ไม่เกิน <strong>10 หน้า</strong></li>
+                    <li class="bullet-item">เอกสาร Executive Summary : ไม่เกิน <strong>500 คำ</strong></li>
+                </ul>
+            </section>
+
+            <section class="glass-panel p-8 text-center flex flex-col justify-center items-center bg-gradient-to-br from-lavender-dark/30 to-space-mid/80 border-gold-dark/30 shadow-[0_0_30px_rgba(245,158,11,0.15)]">
+                <h2 class="text-lg font-bold text-gold-light uppercase tracking-widest mb-4">มูลค่ารางวัลรวม</h2>
+                <div class="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)] mb-6 font-semibold">
+                    100,000 บาท
+                </div>
+                <p class="text-text-muted font-light">พร้อมโอกาสพิเศษในการพัฒนาไอเดียต่อยอดร่วมกับ <strong class="text-white">CareerVisa</strong></p>
+            </section>
+        </div>
+
+        <section id="rules" class="glass-panel p-8 md:p-12 border-2 border-pink-neon/50 reveal section-tracker bg-space-mid/60" data-sticker="4" data-name="Guardian Whale" data-icon="🛡️">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 rounded-full bg-pink-neon/20 flex items-center justify-center text-2xl border border-pink-neon/50">⚠️</div>
+                <h2 class="text-2xl font-bold text-pink-star">กติกาเคร่งครัด (Strict Rules)</h2>
+            </div>
+            <p class="text-lg font-light text-white mb-8 bg-space-dark/50 p-6 rounded-xl border border-pink-neon/30 leading-relaxed">
+                สมาชิกในทีมที่ผ่านเข้ารอบ ต้องเข้าร่วมกิจกรรม Bootcamp อย่างน้อย <strong class="text-pink-neon font-medium">1 คน</strong> หากทีมใดไม่สามารถปฏิบัติตามเงื่อนไข จะถือว่า <strong class="text-pink-neon font-medium">สละสิทธิ์</strong> ในการแข่งขันรอบถัดไปทันที
+            </p>
+            
+            <h3 class="text-lg font-bold mb-5 text-white">พบกับ Mentors ผู้เชี่ยวชาญ</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white/5 p-5 rounded-2xl text-center hover:bg-white/10 transition cursor-pointer border border-white/10 backdrop-blur-sm">
+                    <img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor1" alt="Mentor 1" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-lavender-light/30">
+                    <div class="font-medium text-sm text-white">Mentor 1</div>
+                    <div class="text-xs text-text-muted font-light">CareerVisa</div>
+                </div>
+                <div class="bg-white/5 p-5 rounded-2xl text-center hover:bg-white/10 transition cursor-pointer border border-white/10 backdrop-blur-sm">
+                    <img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor2" alt="Mentor 2" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-lavender-light/30">
+                    <div class="font-medium text-sm text-white">Mentor 2</div>
+                    <div class="text-xs text-text-muted font-light">B-Lab</div>
+                </div>
+                <div class="bg-white/5 p-5 rounded-2xl text-center hover:bg-white/10 transition cursor-pointer border border-white/10 backdrop-blur-sm">
+                    <img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor3" alt="Mentor 3" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-lavender-light/30">
+                    <div class="font-medium text-sm text-white">Mentor 3</div>
+                    <div class="text-xs text-text-muted font-light">Psychologist</div>
+                </div>
+                <div class="bg-white/5 p-5 rounded-2xl text-center hover:bg-white/10 transition cursor-pointer border border-white/10 backdrop-blur-sm">
+                    <img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor4" alt="Mentor 4" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-lavender-light/30">
+                    <div class="font-medium text-sm text-white">Mentor 4</div>
+                    <div class="text-xs text-text-muted font-light">KMITL</div>
+                </div>
+            </div>
+        </section>
+
+        <footer id="apply" class="glass-panel p-10 text-center reveal section-tracker relative overflow-hidden" data-sticker="5" data-name="Galaxy Whale" data-icon="🌌">
+            <div class="absolute inset-0 bg-gradient-to-t from-lavender-dark/20 to-transparent z-0"></div>
+            
+            <div class="relative z-10">
+                <h2 class="text-3xl font-bold mb-4 text-white">พร้อมที่จะสร้างการเปลี่ยนแปลงหรือยัง ?</h2>
+                <p class="text-text-muted font-light mb-8">มาร่วมเป็นส่วนหนึ่งของการสร้างพื้นที่ปลอดภัยเพื่อเยาวชน และครอบครัวกับเรา</p>
+                
+                <div class="bg-white p-3 rounded-2xl inline-block mb-8 shadow-2xl border border-white/20">
+                    <div class="w-40 h-40 flex items-center justify-center rounded-xl overflow-hidden">
+                        <img src="https://i.postimg.cc/3xtdG5pr/scu8.png" alt="Apply QR Code" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                
+                <br>
+                <a href="https://forms.gle/DDrgsvNWTfjHzvKK6" target="_blank" class="btn-primary mb-10 text-lg shadow-[0_0_20px_rgba(255,102,163,0.4)]">กรอกฟอร์มรับสมัครออนไลน์</a>
+
+                <div class="flex flex-col md:flex-row justify-center items-center gap-6 text-sm font-light text-text-muted border-t border-white/10 pt-8 mt-5">
+                    <a href="https://instagram.com/kmitl.caseclub" class="hover:text-pink-star transition">IG : kmitl.caseclub</a>
+                    <span class="hidden md:inline opacity-30">|</span>
+                    <a href="https://facebook.com/KMITLCaseClub" class="hover:text-pink-star transition">FB : KMITL Case Club</a>
+                    <span class="hidden md:inline opacity-30">|</span>
+                    <a href="mailto:k.engineeringcaseclub@gmail.com" class="hover:text-pink-star transition">Email : k.engineeringcaseclub@gmail.com</a>
+                </div>
+                <div class="mt-4 text-xs text-lavender-light/50 font-light">สถานที่จัดงาน : KMITL Lifelong Learning Center</div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // 1. Scroll Reveal
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // 2. Gamification System
+        const inventoryState = [false, false, false, false, false];
+        let unlockedCount = 0;
+        const sections = document.querySelectorAll('.section-tracker');
+        const popup = document.getElementById('popup');
+        const popupIcon = document.getElementById('popup-icon');
+        const popupMsg = document.getElementById('popup-msg');
+        const inventoryText = document.getElementById('inventory-text');
+        const inventoryBox = document.getElementById('inventory');
+        const mainCta = document.getElementById('main-cta');
+
+        const showPopup = (name, icon) => {
+            popupIcon.innerText = icon;
+            popupMsg.innerText = `Unlocked: ${name}!`;
+            popup.classList.add('show');
+            setTimeout(() => { popup.classList.remove('show'); }, 3000);
+        };
+
+        const checkCompletion = () => {
+            if (unlockedCount === 5) {
+                inventoryText.innerHTML = "GALAXY COMPLETE! 🌟";
+                inventoryBox.classList.add('complete');
+                mainCta.classList.add('glow-active');
+                setTimeout(() => {
+                    popupIcon.innerText = "🎉";
+                    popupMsg.innerText = "You found all Space Whales!";
+                    popup.classList.add('show');
+                    setTimeout(() => { popup.classList.remove('show'); }, 4000);
+                }, 3500);
+            }
+        };
+
+        const gamificationObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const stickerId = parseInt(entry.target.getAttribute('data-sticker'));
+                    const name = entry.target.getAttribute('data-name');
+                    const icon = entry.target.getAttribute('data-icon');
+                    
+                    if (!inventoryState[stickerId - 1]) {
+                        inventoryState[stickerId - 1] = true;
+                        unlockedCount++;
+                        
+                        const slot = document.getElementById(`slot-${stickerId}`);
+                        slot.classList.add('unlocked');
+                        inventoryText.innerText = `${unlockedCount}/5`;
+                        
+                        showPopup(name, icon);
+                        checkCompletion();
+                        observer.unobserve(entry.target);
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+
+        sections.forEach(section => gamificationObserver.observe(section));
+
+        // 3. Background Music Control
+        let isPlaying = false;
+        function toggleMusic() {
+            const player = document.getElementById('bgm-player').contentWindow;
+            const icon = document.getElementById('music-icon');
+            
+            if (isPlaying) {
+                player.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                icon.innerText = '▶️';
+            } else {
+                player.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                icon.innerText = '⏸️';
+            }
+            isPlaying = !isPlaying;
+        }
+    </script>
+</body>
+</html>
