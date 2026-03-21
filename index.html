@@ -1,3 +1,17 @@
+รับทราบครับ Boss! ข้อเสนอแนะเรื่อง Mobile UX ของคุณเฉียบขาดมากครับ อาการ "อัดกันแน่น" และ "ปุ่มเกะกะ" เป็น Pain Point คลาสสิกของการแปลงเว็บจาก Desktop ลง Mobile เลยครับ
+
+ในฐานะ UX/UI Designer ผมขอชี้แจงสาเหตุนิดนึงครับ:
+1. **เรื่องวาฬบนมือถือ:** ตอนแรกผมใส่คำสั่ง `display: none;` ซ่อนวาฬไว้ในมือถือ เพราะกลัวว่าจอเล็กๆ แล้ววาฬจะว่ายไปทับตัวหนังสือจนอ่านยาก และอาจทำให้มือถือรุ่นเก่ากระตุกครับ **แต่ถ้า Boss อยากให้มี เราเอาคืนมาได้ครับ!** โดยผมจะ "ย่อขนาดวาฬลง 30% เฉพาะบนมือถือ" เพื่อไม่ให้มันแย่งซีนเนื้อหา
+2. **ปุ่ม Sticky Footer สมัครด้านล่าง:** เห็นด้วย 100% ครับว่ามันกวนใจสายตาและกินพื้นที่จอ (Screen Real Estate) ลบทิ้งได้เลยครับ เพราะเรามีปุ่ม Call-to-Action (CTA) ที่ Header และ Footer ชัดเจนอยู่แล้ว
+3. **เรื่องความอัดแน่น:** ผมจะปรับ Padding (ช่องว่าง) ของกล่องเนื้อหา และปรับขนาดกล่อง Countdown ให้เล็กลงนิดหน่อยบนหน้าจอมือถือ เพื่อให้เว็บมี "พื้นที่หายใจ (White Space)" มากขึ้นครับ
+
+---
+
+### 🛠️ รื้อและเคลียร์ Mobile UI (Copy โค้ดนี้ไปวางทับได้เลยครับ)
+
+ผมรวมทุกการแก้ไข (เอาปุ่มล่างออก, คืนชีพวาฬบนมือถือแบบย่อส่วน, ปรับช่องว่างให้โล่งขึ้น, และล็อกดาวให้คมชัดไม่เป็นฝุ่น) ไว้ในโค้ดฉบับสมบูรณ์นี้แล้วครับ:
+
+```html
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -13,7 +27,7 @@
            Design System & Variables (Nebula Masterpiece)
         ========================================= */
         :root {
-            --space-darkest: #17004e;
+            --space-darkest: #080016; /* Deep Void */
             --space-mid: #501ebd;
             --space-peri: #967cff;
             --glow-pink: #f8c9fd;
@@ -30,13 +44,8 @@
             --glass-border: rgba(163, 127, 241, 0.3);
         }
 
-/* =========================================
-           1. The Deep Void (พื้นหลังอวกาศลึก)
-        ========================================= */
         body {
-            /* ใช้สีพื้นหลังที่มืดสนิท (Deep Dark Space) */
-            background-color: #080016; 
-            /* ใช้ Radial Gradient หลายๆ วง เพื่อจำลองความลึกที่ซับซ้อน ไม่ใช่แค่ไล่สีแบนๆ */
+            background-color: var(--space-darkest);
             background-image: 
                 radial-gradient(circle at 15% 50%, rgba(23, 0, 78, 0.6) 0%, transparent 50%),
                 radial-gradient(circle at 85% 30%, rgba(80, 30, 189, 0.4) 0%, transparent 50%),
@@ -49,31 +58,42 @@
             scroll-behavior: smooth;
         }
 
+        /* ผิวอวกาศแบบนิ่งๆ (กระดาษทราย) */
         body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://www.transparenttextures.com/patterns/stardust.png');
-            opacity: 0.15;
-            z-index: -3;
-            pointer-events: none;
+            opacity: 0.15; z-index: -3; pointer-events: none;
         }
 
-        /* =========================================
-           2. Glowing Nebula (กลุ่มก๊าซเรืองแสง)
-        ========================================= */
+        /* Web Preloader */
+        #preloader {
+            position: fixed; inset: 0; z-index: 9999;
+            background-color: var(--space-darkest);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        .loader-ring {
+            width: 50px; height: 50px; border: 3px solid rgba(248, 201, 253, 0.2);
+            border-top-color: var(--glow-pink); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: linear-gradient(to right, var(--star-lavender), var(--glow-pink));
+            z-index: 100; width: 0%; transition: width 0.1s;
+        }
+
+        /* Nebula Clouds (Blobs) */
         .blob {
             position: fixed; border-radius: 50%; filter: blur(120px); z-index: -3;
-            /* [หัวใจสำคัญ] บังคับให้สีผสมกันแบบ "แสง" ไม่ใช่ทาสีทับกัน */
-            mix-blend-mode: screen; 
-            pointer-events: none; will-change: transform;
+            mix-blend-mode: screen; pointer-events: none; will-change: transform;
             animation: floatBlob 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
         }
-        /* เปลี่ยนจากสีทึบ เป็นสีที่สว่างตรงกลางแล้วจางออก (Radial Gradient) */
         .blob-1 { width: 50vw; height: 50vw; background: radial-gradient(circle, var(--nebula-orchid) 0%, transparent 70%); top: -10%; left: -10%; opacity: 0.6; }
         .blob-2 { width: 60vw; height: 60vw; background: radial-gradient(circle, var(--space-mid) 0%, transparent 70%); bottom: -20%; right: -10%; animation-duration: 25s; opacity: 0.5; }
         .blob-3 { width: 45vw; height: 45vw; background: radial-gradient(circle, var(--glow-pink) 0%, transparent 70%); top: 25%; left: 40%; opacity: 0.3; animation-duration: 30s; filter: blur(150px); }
-        /* [ซ่อนกิมมิก] ใส่สีฟ้า Cyan เข้าไปบางๆ ด้านซ้ายล่าง เพื่อให้ฉากหลังมีมิติความลึก (Contrast) */
         .blob-4 { width: 50vw; height: 50vw; background: radial-gradient(circle, #00d2ff 0%, transparent 70%); bottom: 10%; left: -5%; opacity: 0.15; animation-duration: 22s; }
 
         @keyframes floatBlob {
@@ -81,12 +101,9 @@
             100% { transform: translate(5%, 5%) scale(1.05); }
         }
 
-        /* =========================================
-           3. The Galactic Core (แกนสว่างของทางช้างเผือก)
-        ========================================= */
+        /* The Galactic Core & Twinkling Stars */
         .galactic-core {
             position: fixed; top: 50%; left: 50%; width: 150vw; height: 40vw;
-            /* แกนกลางต้องสว่างจ้า (อมชมพู/ขาว) แล้วแผ่ออกเป็นสีม่วง */
             background: radial-gradient(ellipse at center, rgba(248, 201, 253, 0.25) 0%, rgba(165, 138, 251, 0.1) 40%, transparent 70%);
             transform: translate(-50%, -50%) rotate(-25deg);
             filter: blur(80px); z-index: -4; pointer-events: none; mix-blend-mode: screen;
@@ -101,9 +118,13 @@
                 radial-gradient(1px 1px at 70% 80%, var(--glow-pink), transparent),
                 radial-gradient(1.5px 1.5px at 90% 10%, var(--star-lavender), transparent),
                 radial-gradient(1px 1px at 80% 50%, #fff, transparent);
-            background-size: 250px 250px; z-index: -4; 
-            opacity: 0.8; 
+            background-size: 250px 250px; z-index: -4; opacity: 0.9; 
             pointer-events: none;
+            animation: pulseStars 5s ease-in-out infinite alternate;
+        }
+        @keyframes pulseStars {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; filter: drop-shadow(0 0 3px rgba(255,255,255,0.5)); }
         }
 
         .comet { 
@@ -124,80 +145,52 @@
         }
 
         /* =========================================
-           Easter Egg : Interactive Treasure Whale (Polished)
+           Easter Egg : Interactive Treasure Whale
         ========================================= */
         #space-whale { 
-            position: fixed; 
-            top: 30%; 
-            left: -250px; 
-            z-index: 50; 
-            opacity: 1; /* [UPDATED] ชัดเจน 100% */
-            cursor: pointer; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
+            position: fixed; top: 30%; left: -250px; z-index: 50; opacity: 1; 
+            cursor: pointer; display: flex; flex-direction: column; align-items: center; 
             will-change: transform, opacity; 
         }
-        
         .whale-img { 
-            width: 110px; 
-            height: auto; 
-            filter: drop-shadow(0 0 10px rgba(248, 201, 253, 0.6)) 
-                    drop-shadow(0 0 20px rgba(165, 138, 251, 0.4)); 
+            width: 110px; height: auto; 
+            filter: drop-shadow(0 0 10px rgba(248, 201, 253, 0.6)) drop-shadow(0 0 20px rgba(165, 138, 251, 0.4)); 
             animation: whaleBobbing 4s ease-in-out infinite alternate;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
             will-change: transform, filter;
         }
-        
         #space-whale:hover .whale-img {
             transform: scale(1.15) rotate(-5deg);
-            filter: drop-shadow(0 0 15px rgba(248, 201, 253, 0.9)) 
-                    drop-shadow(0 0 30px rgba(165, 138, 251, 0.7)); 
+            filter: drop-shadow(0 0 15px rgba(248, 201, 253, 0.9)) drop-shadow(0 0 30px rgba(165, 138, 251, 0.7)); 
         }
 
-        /* [UPDATED] ว่ายสมูทขึ้น ไม่หักงอ อาศัย Bobbing ช่วยขยับขึ้นลงแทน */
         @keyframes whaleFlowAcross { 
             0% { transform: translateX(-150px) translateY(0) rotate(2deg); } 
             33% { transform: translateX(35vw) translateY(20px) rotate(-1deg); } 
             66% { transform: translateX(75vw) translateY(-10px) rotate(1deg); } 
             100% { transform: translateX(120vw) translateY(10px) rotate(0deg); } 
         }
-        
-        /* [UPDATED] วิ่งหนีแบบมี Startle Effect (สะดุ้งตกใจ -> ง้างตัว -> พุ่ง) */
         @keyframes whaleRunAway {
             0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
-            8% { transform: translate(5px, -15px) scale(1.25) rotate(-5deg); opacity: 1; filter: drop-shadow(0 0 30px rgba(247, 241, 255, 0.8)); } /* สะดุ้ง ออร่าสว่างวาบ */
-            20% { transform: translate(-25px, 20px) scale(1.1) rotate(-15deg); opacity: 1; } /* ง้างตัวถอยหลัง */
-            100% { transform: translate(150vw, -80vh) scale(0.4) rotate(25deg) scaleX(1.4); opacity: 0; filter: blur(3px); } /* พุ่งหาย */
+            8% { transform: translate(5px, -15px) scale(1.25) rotate(-5deg); opacity: 1; filter: drop-shadow(0 0 30px rgba(247, 241, 255, 0.8)); } 
+            20% { transform: translate(-25px, 20px) scale(1.1) rotate(-15deg); opacity: 1; } 
+            100% { transform: translate(150vw, -80vh) scale(0.4) rotate(25deg) scaleX(1.4); opacity: 0; filter: blur(3px); } 
         }
-
         @keyframes whaleBobbing {
             0% { transform: translateY(-12px) rotate(-2deg); }
             100% { transform: translateY(12px) rotate(2deg); }
         }
 
-        /* Secret Link Popup (Treasure Dropped) */
+        /* Secret Link Popup */
         #secret-popup {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            z-index: 1000;
-            background: rgba(23, 0, 78, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glow-pink);
-            border-radius: 20px;
-            padding: 20px;
+            position: fixed; bottom: 40px; right: 40px; z-index: 1000;
+            background: rgba(23, 0, 78, 0.85); backdrop-filter: blur(20px);
+            border: 1px solid var(--glow-pink); border-radius: 20px; padding: 20px;
             box-shadow: 0 15px 40px rgba(248, 201, 253, 0.4);
-            transform: translateY(100px);
-            opacity: 0;
-            pointer-events: none;
+            transform: translateY(150px); opacity: 0; pointer-events: none;
             transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        #secret-popup.show {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
+        #secret-popup.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
 
         /* =========================================
            UI Components & Glassmorphism
@@ -256,15 +249,27 @@
         .stagger-3 { opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* =========================================
+           📱 Mobile Responsive Optimizations
+        ========================================= */
         @media (max-width: 768px) {
             table, thead, tbody, th, td, tr { display: block; }
             thead tr { position: absolute; top: -9999px; left: -9999px; }
             td { position: relative; padding-left: 40%; border-bottom: 1px solid rgba(255,255,255,0.05); }
             td::before { position: absolute; top: 16px; left: 16px; width: 35%; font-weight: 500; font-size: 0.85rem; color: var(--glow-pink); }
             td:nth-of-type(1)::before { content: "กิจกรรม"; } td:nth-of-type(2)::before { content: "วันที่ / เวลา"; } td:nth-of-type(3)::before { content: "สถานที่"; }
-            #music-btn, #music-hint { bottom: 85px !important; }
-            #space-whale { display: none; } 
-            #secret-popup { bottom: 85px; right: 20px; left: 20px; transform: translateY(100px); }
+            
+            /* เลื่อนปุ่มเพลงลงมานิดหน่อยเพราะเอา Footer ออกแล้ว */
+            #music-btn, #music-hint { bottom: 24px !important; } 
+            
+            /* กล่องเนื้อหาลด Padding ลงให้มีพื้นที่อ่าน */
+            .glass-panel { padding: 1.5rem !important; }
+            
+            /* คืนชีพวาฬบนมือถือ พร้อมย่อขนาดลง 30% เพื่อไม่ให้บังจอ */
+            #space-whale .whale-img { width: 70px; }
+            
+            /* จัดตำแหน่ง Popup ในมือถือให้ลอยขึ้นมาสวยๆ */
+            #secret-popup { bottom: 24px; right: 20px; left: 20px; transform: translateY(150px); }
         }
     </style>
 </head>
@@ -277,7 +282,10 @@
 
     <div id="progress-bar"></div>
     <div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div><div class="blob blob-4"></div>
+    
+    <div class="galactic-core"></div>
     <div class="stars-bg"></div>
+    
     <div class="comet comet-1"></div><div class="comet comet-2"></div><div class="comet comet-3"></div>
 
     <div id="space-whale" class="hidden">
@@ -307,10 +315,6 @@
     
     <div id="bgm-player" class="hidden"></div>
 
-    <div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-gradient-to-r from-space-mid to-nebula-orchid">
-        <a href="https://forms.gle/DDrgsvNWTfjHzvKK6" target="_blank" class="block w-full text-center py-4 font-bold text-lg text-white shadow-[0_-5px_20px_rgba(23,0,78,0.5)]">สมัครเข้าร่วมโครงการ</a>
-    </div>
-
     <nav class="fixed w-full top-0 z-50 glass-panel !rounded-none !border-x-0 !border-t-0 py-3 px-6 stagger-1">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="hidden md:flex gap-6 text-sm text-text-muted font-light">
@@ -330,42 +334,43 @@
         </div>
     </nav>
         <br>
-    <header class="pt-32 pb-16 flex flex-col items-center justify-center px-6 relative z-10 text-center">
-        <img src="https://i.postimg.cc/tTt2jN74/bv13.png" class="w-72 md:w-[32rem] mb-6 drop-shadow-[0_0_40px_rgba(248,201,253,0.2)] stagger-1" alt="Safe Space Logo">
+    <header class="pt-32 pb-12 flex flex-col items-center justify-center px-6 relative z-10 text-center">
+        <img src="https://i.postimg.cc/tTt2jN74/bv13.png" class="w-64 md:w-[32rem] mb-6 drop-shadow-[0_0_40px_rgba(248,201,253,0.2)] stagger-1" alt="Safe Space Logo">
         <br>
-        <p class="text-xl md:text-2xl mb-8 text-text-muted font-light leading-relaxed max-w-2xl stagger-2">
+        <p class="text-lg md:text-2xl mb-8 text-text-muted font-light leading-relaxed max-w-2xl stagger-2">
             ร่วมประชันไอเดียนวัตกรรมด้านสุขภาพจิตที่เริ่มต้นจาก “ความเข้าใจ” เพื่อหยุดวงจรบาดแผลในครอบครัว
         </p>
         <br>
-        <div class="flex justify-center gap-4 md:gap-6 mb-10 stagger-3">
-            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-5 py-3 min-w-[80px] backdrop-blur-md">
-                <div id="cd-days" class="text-3xl font-bold text-glow-pink">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Days</div>
+        
+        <div class="flex flex-wrap justify-center gap-3 md:gap-6 mb-10 stagger-3">
+            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-4 py-2 md:px-5 md:py-3 min-w-[70px] md:min-w-[80px] backdrop-blur-md">
+                <div id="cd-days" class="text-2xl md:text-3xl font-bold text-glow-pink">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Days</div>
             </div>
-            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-5 py-3 min-w-[80px] backdrop-blur-md">
-                <div id="cd-hours" class="text-3xl font-bold text-white">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Hours</div>
+            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-4 py-2 md:px-5 md:py-3 min-w-[70px] md:min-w-[80px] backdrop-blur-md">
+                <div id="cd-hours" class="text-2xl md:text-3xl font-bold text-white">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Hours</div>
             </div>
-            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-5 py-3 min-w-[80px] backdrop-blur-md">
-                <div id="cd-mins" class="text-3xl font-bold text-white">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Mins</div>
+            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-4 py-2 md:px-5 md:py-3 min-w-[70px] md:min-w-[80px] backdrop-blur-md">
+                <div id="cd-mins" class="text-2xl md:text-3xl font-bold text-white">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Mins</div>
             </div>
-            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-5 py-3 min-w-[80px] backdrop-blur-md">
-                <div id="cd-secs" class="text-3xl font-bold text-nebula-soft">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Secs</div>
+            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-4 py-2 md:px-5 md:py-3 min-w-[70px] md:min-w-[80px] backdrop-blur-md">
+                <div id="cd-secs" class="text-2xl md:text-3xl font-bold text-nebula-soft">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Secs</div>
             </div>
         </div>
 
-        <div class="flex flex-col md:flex-row gap-4 stagger-3">
-            <a href="#apply" class="btn-primary" id="main-cta">สมัครเลย!</a>
-            <a href="https://drive.google.com/drive/folders/1DbOPqMuR9cQpg9pPfja8slz5alXw05DQ?usp=drive_link" target="_blank" class="px-8 py-4 rounded-full border border-star-lavender flex items-center justify-center font-medium transition hover:bg-white/10 text-text-muted hover:text-white">อ่าน Booklet</a>
+        <div class="flex flex-col md:flex-row gap-4 stagger-3 w-full md:w-auto">
+            <a href="#apply" class="btn-primary w-full md:w-auto" id="main-cta">สมัครเลย!</a>
+            <a href="https://drive.google.com/drive/folders/1DbOPqMuR9cQpg9pPfja8slz5alXw05DQ?usp=drive_link" target="_blank" class="px-8 py-4 rounded-full border border-star-lavender flex items-center justify-center font-medium transition hover:bg-white/10 text-text-muted hover:text-white w-full md:w-auto">อ่าน Booklet</a>
         </div>
     </header>
 
-    <div class="max-w-6xl mx-auto px-6 pb-40 space-y-16 md:space-y-24 relative z-10">
-        <section id="overview" class="glass-panel p-8 md:p-12 reveal" >
-            <div class="flex items-center gap-4 mb-6"><div class="text-3xl bg-space-mid/80 w-14 h-14 flex items-center justify-center rounded-full border border-star-lavender/30 shadow-[0_0_15px_rgba(150,124,255,0.3)]">💡</div><h2 class="text-2xl font-bold text-white">เฟ้นหาไอเดียแก้ปัญหาสุขภาพจิต</h2></div>
-            <p class="text-lg leading-relaxed text-text-muted font-light">Safe Space Hackathon 2026 : Heart Glow คือเวทีที่เปิดโอกาสให้เยาวชนและนักศึกษา ร่วมกันออกแบบ “ทางออกของปัญหาสุขภาพจิตในครอบครัว” เพื่อหยุดวงจรปัญหาที่เกิดจากความไม่เข้าใจ และพัฒนาแนวทางที่สามารถนำไปใช้ได้จริงในชีวิตประจำวัน โดยไม่จำกัดรูปแบบของนวัตกรรม ไม่ว่าจะเป็นเทคโนโลยี กิจกรรม เครื่องมือ สื่อสร้างสรรค์ พื้นที่การเรียนรู้ หรือรูปแบบการสื่อสารใหม่ ๆ ขอเพียงเป็นแนวทางที่ ช่วยสร้างความเข้าใจระหว่างคนในครอบครัว และนำไปสู่การเปลี่ยนแปลงที่ยั่งยืนในระยะยาว</p>
+    <div class="max-w-6xl mx-auto px-4 md:px-6 pb-32 md:pb-40 space-y-12 md:space-y-24 relative z-10">
+        <section id="overview" class="glass-panel p-6 md:p-12 reveal" >
+            <div class="flex items-center gap-4 mb-6"><div class="text-2xl md:text-3xl bg-space-mid/80 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full border border-star-lavender/30 shadow-[0_0_15px_rgba(150,124,255,0.3)]">💡</div><h2 class="text-xl md:text-2xl font-bold text-white">เฟ้นหาไอเดียแก้ปัญหาสุขภาพจิต</h2></div>
+            <p class="text-base md:text-lg leading-relaxed text-text-muted font-light">Safe Space Hackathon 2026 : Heart Glow คือเวทีที่เปิดโอกาสให้เยาวชนและนักศึกษา ร่วมกันออกแบบ “ทางออกของปัญหาสุขภาพจิตในครอบครัว” เพื่อหยุดวงจรปัญหาที่เกิดจากความไม่เข้าใจ และพัฒนาแนวทางที่สามารถนำไปใช้ได้จริงในชีวิตประจำวัน โดยไม่จำกัดรูปแบบของนวัตกรรม ไม่ว่าจะเป็นเทคโนโลยี กิจกรรม เครื่องมือ สื่อสร้างสรรค์ พื้นที่การเรียนรู้ หรือรูปแบบการสื่อสารใหม่ ๆ ขอเพียงเป็นแนวทางที่ ช่วยสร้างความเข้าใจระหว่างคนในครอบครัว และนำไปสู่การเปลี่ยนแปลงที่ยั่งยืนในระยะยาว</p>
         </section>
 
-        <section id="timeline" class="glass-panel p-8 md:p-12 reveal">
-            <h2 class="text-2xl font-bold mb-6 text-white">ไทม์ไลน์</h2>
+        <section id="timeline" class="glass-panel p-6 md:p-12 reveal">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 text-white">ไทม์ไลน์</h2>
             <div class="table-wrapper">
                 <table>
                     <thead><tr><th>กิจกรรม</th><th>วันที่ / เวลา</th><th>สถานที่ / รูปแบบ</th></tr></thead>
@@ -380,10 +385,10 @@
             </div>
         </section>
 
-        <div id="criteria" class="grid grid-cols-1 md:grid-cols-2 gap-8 reveal">
-            <section class="glass-panel p-8">
-                <h2 class="text-xl font-bold mb-6 text-white">เกณฑ์การสมัครและการส่งผลงาน</h2>
-                <ul class="space-y-4 font-light text-text-main">
+        <div id="criteria" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 reveal">
+            <section class="glass-panel p-6 md:p-8">
+                <h2 class="text-lg md:text-xl font-bold mb-6 text-white">เกณฑ์การสมัครและการส่งผลงาน</h2>
+                <ul class="space-y-4 font-light text-sm md:text-base text-text-main">
                     <li class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2.5 before:w-2 before:h-2 before:bg-glow-pink before:rounded-full before:shadow-[0_0_8px_var(--glow-pink)]">อายุ <strong>15-23 ปี</strong> (นักเรียน/นักศึกษา)</li>
                     <li class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2.5 before:w-2 before:h-2 before:bg-glow-pink before:rounded-full before:shadow-[0_0_8px_var(--glow-pink)]">สมัครเป็นทีม : <strong>3-4 คน</strong> (ต่างสถาบันได้)</li>
                     <li class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2.5 before:w-2 before:h-2 before:bg-glow-pink before:rounded-full before:shadow-[0_0_8px_var(--glow-pink)]">ค่าสมัคร : <strong>500 บาท/ทีม</strong> (รับเกียรติบัตรทุกคน)</li>
@@ -392,92 +397,93 @@
                 </ul>
             </section>
 
-            <section class="glass-panel p-8 text-center flex flex-col justify-center items-center overflow-hidden border-gold-dark/30">
-                <h2 class="text-sm font-bold text-gold-light uppercase tracking-widest mb-4 opacity-80">ชิงเงินรางวัลรวมกว่า</h2>
+            <section class="glass-panel p-6 md:p-8 text-center flex flex-col justify-center items-center overflow-hidden border-gold-dark/30">
+                <h2 class="text-xs md:text-sm font-bold text-gold-light uppercase tracking-widest mb-4 opacity-80">ชิงเงินรางวัลรวมกว่า</h2>
                 <div class="prize-container flex flex-col items-center justify-center">
-                    <div class="prize-text text-6xl md:text-7xl mb-2">100,000</div>
-                    <div class="text-2xl font-bold text-gold-light drop-shadow-md">บาท</div>
+                    <div class="prize-text text-5xl md:text-7xl mb-2">100,000</div>
+                    <div class="text-xl md:text-2xl font-bold text-gold-light drop-shadow-md">บาท</div>
                 </div>
-                <p class="text-text-muted font-light text-sm mt-6 bg-space-darkest/40 px-4 py-1 rounded-full border border-white/5">
+                <p class="text-text-muted font-light text-xs md:text-sm mt-6 bg-space-darkest/40 px-4 py-2 rounded-full border border-white/5">
                     พร้อมโอกาสพิเศษในการพัฒนาไอเดียต่อยอดร่วมกับ <strong class="text-white">CareerVisa</strong>
                 </p>
             </section>
         </div>
 
-        <section id="rules" class="glass-panel p-8 md:p-12 border-2 border-glow-pink/40 reveal">
-            <div class="flex items-center gap-4 mb-6"><div class="text-2xl bg-glow-pink/10 w-12 h-12 flex items-center justify-center rounded-full border border-glow-pink/50">⚠️</div><h2 class="text-2xl font-bold text-glow-pink">กติกาการแข่งขัน</h2></div>
-            <p class="pulse-warning text-lg font-light text-white mb-8 bg-space-darkest/60 p-6 rounded-xl border leading-relaxed">
-                สมาชิกในทีมที่ผ่านเข้ารอบ ต้องเข้าร่วมกิจกรรม Bootcamp อย่างน้อย <strong class="text-glow-pink font-medium text-xl">1 คน</strong> หากทีมใดไม่สามารถปฏิบัติตามเงื่อนไข จะถือว่า <strong class="text-glow-pink font-medium">สละสิทธิ์</strong> ในการแข่งขันรอบถัดไปทันที
+        <section id="rules" class="glass-panel p-6 md:p-12 border-2 border-glow-pink/40 reveal">
+            <div class="flex items-center gap-4 mb-6"><div class="text-xl md:text-2xl bg-glow-pink/10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full border border-glow-pink/50">⚠️</div><h2 class="text-xl md:text-2xl font-bold text-glow-pink">กติกาการแข่งขัน</h2></div>
+            <p class="pulse-warning text-base md:text-lg font-light text-white mb-8 bg-space-darkest/60 p-5 md:p-6 rounded-xl border leading-relaxed">
+                สมาชิกในทีมที่ผ่านเข้ารอบ ต้องเข้าร่วมกิจกรรม Bootcamp อย่างน้อย <strong class="text-glow-pink font-medium md:text-xl">1 คน</strong> หากทีมใดไม่สามารถปฏิบัติตามเงื่อนไข จะถือว่า <strong class="text-glow-pink font-medium">สละสิทธิ์</strong> ในการแข่งขันรอบถัดไปทันที
             </p>
-            <h3 class="text-lg font-bold mb-5 text-white">เรียนรู้และพัฒนาไอเดียไปกับเหล่า Mentors ผู้เชี่ยวชาญตัวจริง</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-white/5 p-5 rounded-2xl text-center border border-white/5 hover:bg-white/10 transition"><img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor1" class="w-16 h-16 rounded-full mx-auto mb-4 bg-space-darkest/50 border border-star-lavender/30" alt="Mentor 1"><div class="font-medium text-sm text-white">Mentor 1</div><div class="text-xs text-text-muted font-light">CareerVisa</div></div>
-                <div class="bg-white/5 p-5 rounded-2xl text-center border border-white/5 hover:bg-white/10 transition"><img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor2" class="w-16 h-16 rounded-full mx-auto mb-4 bg-space-darkest/50 border border-star-lavender/30" alt="Mentor 2"><div class="font-medium text-sm text-white">Mentor 2</div><div class="text-xs text-text-muted font-light">B-Lab</div></div>
-                <div class="bg-white/5 p-5 rounded-2xl text-center border border-white/5 hover:bg-white/10 transition"><img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor3" class="w-16 h-16 rounded-full mx-auto mb-4 bg-space-darkest/50 border border-star-lavender/30" alt="Mentor 3"><div class="font-medium text-sm text-white">Mentor 3</div><div class="text-xs text-text-muted font-light">Psychologist</div></div>
-                <div class="bg-white/5 p-5 rounded-2xl text-center border border-white/5 hover:bg-white/10 transition"><img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor4" class="w-16 h-16 rounded-full mx-auto mb-4 bg-space-darkest/50 border border-star-lavender/30" alt="Mentor 4"><div class="font-medium text-sm text-white">Mentor 4</div><div class="text-xs text-text-muted font-light">KMITL</div></div>
+            <h3 class="text-base md:text-lg font-bold mb-5 text-white">เรียนรู้และพัฒนาไอเดียไปกับเหล่า Mentors ผู้เชี่ยวชาญตัวจริง</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                <div class="bg-white/5 p-4 md:p-5 rounded-2xl text-center border border-white/5 hover:bg-white/10 transition"><img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor1" class="w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto mb-3 md:mb-4 bg-space-darkest/50 border border-star-lavender/30" alt="Mentor 1"><div class="font-medium text-xs md:text-sm text-white">Mentor 1</div><div class="text-[10px] md:text-xs text-text-muted font-light">CareerVisa</div></div>
+                <div class="bg-white/5 p-4 md:p-5 rounded-2xl text-center border border-white/5 hover:bg-white/10 transition"><img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor2" class="w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto mb-3 md:mb-4 bg-space-darkest/50 border border-star-lavender/30" alt="Mentor 2"><div class="font-medium text-xs md:text-sm text-white">Mentor 2</div><div class="text-[10px] md:text-xs text-text-muted font-light">B-Lab</div></div>
+                <div class="bg-white/5 p-4 md:p-5 rounded-2xl text-center border border-white/5 hover:bg-white/10 transition"><img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor3" class="w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto mb-3 md:mb-4 bg-space-darkest/50 border border-star-lavender/30" alt="Mentor 3"><div class="font-medium text-xs md:text-sm text-white">Mentor 3</div><div class="text-[10px] md:text-xs text-text-muted font-light">Psychologist</div></div>
+                <div class="bg-white/5 p-4 md:p-5 rounded-2xl text-center border border-white/5 hover:bg-white/10 transition"><img src="https://api.dicebear.com/8.x/notionists/svg?seed=Mentor4" class="w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto mb-3 md:mb-4 bg-space-darkest/50 border border-star-lavender/30" alt="Mentor 4"><div class="font-medium text-xs md:text-sm text-white">Mentor 4</div><div class="text-[10px] md:text-xs text-text-muted font-light">KMITL</div></div>
             </div>
         </section>
 
-        <section id="faq" class="glass-panel p-8 md:p-12 reveal">
-            <h2 class="text-2xl font-bold text-white mb-8">คำถามที่พบบ่อย</h2>
+        <section id="faq" class="glass-panel p-6 md:p-12 reveal">
+            <h2 class="text-xl md:text-2xl font-bold text-white mb-8">คำถามที่พบบ่อย</h2>
             <div class="space-y-4">
                 <details class="faq-item">
                     <summary>จำเป็นต้องมีพื้นฐานการเขียนโปรแกรม (Coding) หรือไม่ ?</summary>
-                    <div class="faq-content">ไม่จำเป็น การแข่งขันมุ่งเน้นที่การคิดค้นโซลูชันเพื่อแก้ปัญหาสุขภาพจิต ซึ่งสามารถออกมาในรูปแบบของแคมเปญ กิจกรรม หรือกระบวนการต่างๆ นอกเหนือจากเทคโนโลยีได้</div>
+                    <div class="faq-content text-sm md:text-base">ไม่จำเป็น การแข่งขันมุ่งเน้นที่การคิดค้นโซลูชันเพื่อแก้ปัญหาสุขภาพจิต ซึ่งสามารถออกมาในรูปแบบของแคมเปญ กิจกรรม หรือกระบวนการต่างๆ นอกเหนือจากเทคโนโลยีได้</div>
                 </details>
                 <details class="faq-item">
                     <summary>สามารถรวมทีมกับเพื่อนต่างโรงเรียนหรือต่างมหาวิทยาลัยได้หรือไม่ ?</summary>
-                    <div class="faq-content">สามารถทำได้ หากสมาชิกในทีมมีอายุระหว่าง 15 - 23 ปี และมีจำนวนสมาชิกครบ 3 - 4 คนตามกติกาที่กำหนด</div>
+                    <div class="faq-content text-sm md:text-base">สามารถทำได้ หากสมาชิกในทีมมีอายุระหว่าง 15 - 23 ปี และมีจำนวนสมาชิกครบ 3 - 4 คนตามกติกาที่กำหนด</div>
                 </details>
                 <details class="faq-item">
                     <summary>การชำระค่าสมัคร 500 บาท ชำระได้ในขั้นตอนไหน ?</summary>
-                    <div class="faq-content">หลังจากที่ทีมของคุณกรอกฟอร์มใบสมัครเรียบร้อยแล้ว จะมีรายละเอียดช่องทางการโอนเงินปรากฏขึ้นในหน้ายืนยันการสมัครและส่งไปที่อีเมลหัวหน้าทีม</div>
+                    <div class="faq-content text-sm md:text-base">หลังจากที่ทีมของคุณกรอกฟอร์มใบสมัครเรียบร้อยแล้ว จะมีรายละเอียดช่องทางการโอนเงินปรากฏขึ้นในหน้ายืนยันการสมัครและส่งไปที่อีเมลหัวหน้าทีม</div>
                 </details>
             </div>
         </section>
 
-        <footer id="apply" class="glass-panel p-10 text-center reveal relative overflow-hidden">
+        <footer id="apply" class="glass-panel p-8 md:p-10 text-center reveal relative overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-t from-space-mid/40 to-transparent z-0"></div>
             
             <div class="relative z-10">
-                <h2 class="text-3xl font-bold mb-4 text-white stagger-1">ลองเปลี่ยนอนาคต…เริ่มที่นี่</h2>
-                <p class="text-text-muted font-light mb-12 max-w-2xl mx-auto stagger-2">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4 text-white stagger-1">ลองเปลี่ยนอนาคต…เริ่มที่นี่</h2>
+                <p class="text-sm md:text-base text-text-muted font-light mb-10 max-w-2xl mx-auto stagger-2">
                     มาร่วมเป็นส่วนหนึ่งของการสร้าง “Safe Space” เพื่อเยาวชนและครอบครัวไทยไปด้วยกัน
                 </p>
 
-                <div class="flex flex-col md:flex-row justify-center items-stretch gap-8 md:gap-20 mb-12 stagger-3">
+                <div class="flex flex-col md:flex-row justify-center items-stretch gap-8 md:gap-20 mb-10 stagger-3">
                     <div class="flex flex-col items-center group">
-                        <p class="text-star-lavender text-sm font-medium mb-4 opacity-80">ยังไม่มีทีม? เข้า OpenChat เลย</p>
+                        <p class="text-star-lavender text-xs md:text-sm font-medium mb-3 opacity-80">ยังไม่มีทีม? เข้า OpenChat เลย</p>
                         <div class="bg-white p-3 rounded-2xl shadow-[0_0_20px_rgba(188,162,254,0.2)] border border-white/20 transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_30px_rgba(188,162,254,0.4)]">
-                            <img src="https://i.postimg.cc/3xtdG5pr/scu8.png" alt="OpenChat QR" class="w-32 h-32 md:w-40 md:h-40 object-cover rounded-xl grayscale-[0.5] group-hover:grayscale-0 transition-all">
+                            <img src="https://i.postimg.cc/3xtdG5pr/scu8.png" alt="OpenChat QR" class="w-28 h-28 md:w-40 md:h-40 object-cover rounded-xl grayscale-[0.5] group-hover:grayscale-0 transition-all">
                         </div>
                     </div>
 
                     <div class="flex flex-col items-center group">
-                        <p class="text-glow-pink text-sm font-medium mb-4">มีทีมแล้ว? รีบสมัครเลย!</p>
+                        <p class="text-glow-pink text-xs md:text-sm font-medium mb-3">มีทีมแล้ว? รีบสมัครเลย!</p>
                         <div class="bg-white p-3 rounded-2xl shadow-[0_0_30px_rgba(248,201,253,0.3)] border border-white/20 transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_40px_rgba(248,201,253,0.5)]">
-                            <img src="https://i.postimg.cc/3xtdG5pr/scu8.png" alt="Register QR" class="w-32 h-32 md:w-40 md:h-40 object-cover rounded-xl">
+                            <img src="https://i.postimg.cc/3xtdG5pr/scu8.png" alt="Register QR" class="w-28 h-28 md:w-40 md:h-40 object-cover rounded-xl">
                         </div>
                     </div>
                 </div>
 
-                <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-12 stagger-4">
-                    <a href="https://line.me/ti/g2/YOUR_OPENCHAT_LINK" target="_blank" class="px-10 py-4 rounded-full border border-star-lavender/50 flex items-center justify-center font-medium transition-all hover:bg-white/10 text-text-muted hover:text-white w-full md:w-auto">
+                <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-10 stagger-4">
+                    <a href="https://line.me/ti/g2/YOUR_OPENCHAT_LINK" target="_blank" class="px-8 md:px-10 py-3 md:py-4 rounded-full border border-star-lavender/50 flex items-center justify-center font-medium transition-all hover:bg-white/10 text-text-muted hover:text-white w-full md:w-auto">
                         เข้ากลุ่มเพื่อหาเพื่อนร่วมทีม
                     </a>
                     
-                    <a href="https://forms.gle/DDrgsvNWTfjHzvKK6" target="_blank" class="btn-primary px-16 text-lg w-full md:w-auto shadow-[0_10px_25px_rgba(255,102,163,0.4)]">
+                    <a href="https://forms.gle/DDrgsvNWTfjHzvKK6" target="_blank" class="btn-primary px-12 md:px-16 py-3 md:py-4 text-base md:text-lg w-full md:w-auto shadow-[0_10px_25px_rgba(255,102,163,0.4)]">
                         กรอกใบสมัครที่นี่
                     </a>
                 </div>
 
-                <div class="flex flex-col md:flex-row justify-center items-center gap-6 text-xs font-light text-text-muted border-t border-glass-border pt-8 mt-5">
+                <div class="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-6 text-[10px] md:text-xs font-light text-text-muted border-t border-glass-border pt-6 mt-5">
                     <a href="https://instagram.com/kmitl.caseclub" class="hover:text-glow-pink transition">IG : kmitl.caseclub</a>
                     <span class="hidden md:inline opacity-30">/</span>
                     <a href="https://facebook.com/KMITLCaseClub" class="hover:text-glow-pink transition">FB : KMITL Case Club</a>
                     <span class="hidden md:inline opacity-30">/</span>
                     <a href="mailto:k.engineeringcaseclub@gmail.com" class="hover:text-glow-pink transition">Email : k.engineeringcaseclub@gmail.com</a>
                 </div>
+                <div class="mt-4 text-[9px] md:text-[10px] text-star-lavender/50 font-light tracking-widest uppercase">KMITL Lifelong Learning Center</div>
             </div>
         </footer>
 
@@ -638,3 +644,6 @@
     </script>
 </body>
 </html>
+```
+
+ลองเปิดเช็กบนมือถือ Android ของคุณดูอีกรอบครับ คราวนี้รับรองว่าพื้นที่โล่งขึ้น กดสบายตาขึ้น และที่สำคัญ...น้องวาฬอวกาศมาว่ายทักทายเรียบร้อยครับ!
