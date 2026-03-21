@@ -266,7 +266,7 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
         <div class="text-xs font-light text-white hidden md:block">Space Vibe</div>
     </div>
     
-<iframe id="bgm-player" class="hidden" allow="autoplay"></iframe>
+<div id="bgm-player" class="hidden"></div>
 
     <div class="inventory-dock" id="inventory" role="region" aria-label="Space Whale Sticker Collection">
         <div class="flex gap-1" id="slot-container">
@@ -466,7 +466,7 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
 
     </div>
 
-    <script>
+<script>
         // Web Preloader Logic
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -532,11 +532,12 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
         document.querySelectorAll('.section-tracker').forEach(el => gameObserver.observe(el));
 
         /* =========================================
-           YouTube IFrame API (The Real Randomizer)
+           YouTube IFrame API (The Real Randomizer - Debugged)
         ========================================= */
         let ytPlayer;
         let isPlaying = false;
         let isPlayerReady = false;
+        let hasStarted = false; // เช็กว่าเคยกดเล่นครั้งแรกหรือยัง
 
         // 1. โหลด YouTube API
         const tag = document.createElement('script');
@@ -544,7 +545,7 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
         const firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        // 2. เมื่อ API โหลดเสร็จ จะสร้าง Player
+        // 2. เมื่อ API โหลดเสร็จ จะสร้าง Player ทับแท็ก <div id="bgm-player">
         function onYouTubeIframeAPIReady() {
             ytPlayer = new YT.Player('bgm-player', {
                 height: '0',
@@ -555,31 +556,23 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
                     enablejsapi: 1,
                     controls: 0,
                     showinfo: 0,
-                    rel: 0
+                    rel: 0,
+                    autoplay: 0 // ปิด Autoplay เพื่อไม่ให้โดนบล็อก
                 },
                 events: {
-                    'onReady': onPlayerReady
+                    'onReady': function(event) {
+                        isPlayerReady = true; // บอกระบบว่า YouTube พร้อมทำงานแล้ว
+                    }
                 }
             });
         }
 
-        // 3. เมื่อ Player พร้อม ให้สุ่มเพลงมารอไว้ (แต่ยังไม่เล่น)
-        function onPlayerReady(event) {
-            isPlayerReady = true;
-            const totalSongs = 15; // จำนวนเพลงใน Playlist
-            const randomIndex = Math.floor(Math.random() * totalSongs);
-            
-            // สั่งให้ Player กระโดดไปที่เพลงสุ่ม และเตรียมพร้อม (ไม่ Autoplay กวนผู้ใช้)
-            event.target.playVideoAt(randomIndex);
-            setTimeout(() => {
-                event.target.pauseVideo();
-            }, 500); 
-        }
-
-        // 4. ควบคุมปุ่ม Space Vibe
+        // 3. ควบคุมปุ่ม Space Vibe
         function toggleMusic() {
-            if (!isPlayerReady) return; // ป้องกันการกดก่อนที่ YouTube จะโหลดเสร็จ
-            
+            // ถ้า YouTube โหลดยังไม่เสร็จ จะกดไม่ได้ (เพื่อป้องกันบั๊ก)
+            if (!isPlayerReady) return; 
+
+            // ซ่อน Tooltip
             const hint = document.getElementById('music-hint');
             if (hint) hint.style.opacity = '0';
 
@@ -588,7 +581,15 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
                 ytPlayer.pauseVideo(); 
                 icon.innerText = '▶️'; 
             } else { 
-                ytPlayer.playVideo(); 
+                // หากกดครั้งแรก ให้ทำการสุ่มเพลง
+                if (!hasStarted) {
+                    const totalSongs = 15; // จำนวนเพลงใน Playlist
+                    const randomIndex = Math.floor(Math.random() * totalSongs);
+                    ytPlayer.playVideoAt(randomIndex);
+                    hasStarted = true;
+                } else {
+                    ytPlayer.playVideo(); 
+                }
                 icon.innerText = '⏸️'; 
             }
             isPlaying = !isPlaying;
