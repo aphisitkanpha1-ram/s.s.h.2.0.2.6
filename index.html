@@ -266,9 +266,7 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
         <div class="text-xs font-light text-white hidden md:block">Space Vibe</div>
     </div>
     
-<iframe id="bgm-player" class="hidden" 
-    src="https://www.youtube.com/embed/videoseries?list=PL2ykJhkoFA1-ZgraHwOdKPXobF2vvElTx&enablejsapi=1" 
-    allow="autoplay"></iframe>
+<iframe id="bgm-player" class="hidden" allow="autoplay"></iframe>
 
     <div class="inventory-dock" id="inventory" role="region" aria-label="Space Whale Sticker Collection">
         <div class="flex gap-1" id="slot-container">
@@ -281,6 +279,7 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
         <div class="w-[1px] h-6 bg-white/20 mx-1 hidden" id="dock-divider"></div>
         <a href="https://drive.google.com/drive/folders/1DbOPqMuR9cQpg9pPfja8slz5alXw05DQ?usp=drive_link" target="_blank" class="hidden text-space-darkest bg-glow-pink text-[11px] font-bold px-4 py-2 rounded-full shadow-[0_0_15px_rgba(248,201,253,0.5)] animate-pulse" id="reward-link">🐳 RECIEVE</a>
     </div>
+    
     <div class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-space-mid px-6 py-2 rounded-full border border-star-lavender shadow-2xl text-white font-medium opacity-0 pointer-events-none transition-all duration-500 flex items-center gap-2" id="popup">
         <span id="popup-icon">🐳</span> <span id="popup-msg" class="text-sm">Unlocked!</span>
     </div>
@@ -348,23 +347,20 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
         </section>
 
         <section id="timeline" class="glass-panel p-8 md:p-12 reveal section-tracker" data-sticker="2" data-icon="⏱️">
-    <h2 class="text-2xl font-bold mb-6 text-white">ไทม์ไลน์</h2>
-    
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr><th>กิจกรรม</th><th>วันที่ / เวลา</th><th>สถานที่ / รูปแบบ</th></tr>
-            </thead>
-            <tbody class="font-light text-sm md:text-base">
-                <tr><td>เปิดรับสมัคร</td><td>1 ต.ค. - 31 ต.ค. 69</td><td>ช่องทางออนไลน์</td></tr>
-                <tr><td>ประกาศผล 50 ทีม / 20 ทีม</td><td>2 พ.ย. / 5 พ.ย. 69</td><td>ช่องทางออนไลน์</td></tr>
-                <tr class="bg-space-mid/30"><td class="text-glow-pink font-medium">Bootcamp Day</td><td class="text-white font-medium">14 พ.ย. 69</td><td>KMITL (บังคับ)</td></tr>
-                <tr><td>ประกาศผล 10 ทีม / Mentoring</td><td>20 พ.ย. / 25 พ.ย. 69</td><td>Online Meeting</td></tr>
-                <tr class="bg-space-mid/30"><td class="text-glow-pink font-medium">Final Pitching Day</td><td class="text-white font-medium">30 พ.ย. 69 <span class="text-xs font-light text-star-lavender block">(08:00 - 16:00 น.)</span></td><td>KMITL Lifelong Learning Center</td></tr>
-            </tbody>
-        </table>
-    </div>
-</section>
+            <h2 class="text-2xl font-bold mb-6 text-white">ไทม์ไลน์</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>กิจกรรม</th><th>วันที่ / เวลา</th><th>สถานที่ / รูปแบบ</th></tr></thead>
+                    <tbody class="font-light text-sm md:text-base">
+                        <tr><td>เปิดรับสมัคร</td><td>1 ต.ค. - 31 ต.ค. 69</td><td>ช่องทางออนไลน์</td></tr>
+                        <tr><td>ประกาศผล 50 ทีม / 20 ทีม</td><td>2 พ.ย. / 5 พ.ย. 69</td><td>ช่องทางออนไลน์</td></tr>
+                        <tr class="bg-space-mid/30"><td class="text-glow-pink font-medium">Bootcamp Day</td><td class="text-white font-medium">14 พ.ย. 69</td><td>KMITL (บังคับ)</td></tr>
+                        <tr><td>ประกาศผล 10 ทีม / Mentoring</td><td>20 พ.ย. / 25 พ.ย. 69</td><td>Online Meeting</td></tr>
+                        <tr class="bg-space-mid/30"><td class="text-glow-pink font-medium">Final Pitching Day</td><td class="text-white font-medium">30 พ.ย. 69 <span class="text-xs font-light text-star-lavender block">(08:00 - 16:00 น.)</span></td><td>KMITL Lifelong Learning Center</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
         <div id="criteria" class="grid grid-cols-1 md:grid-cols-2 gap-8 reveal section-tracker" data-sticker="3" data-icon="🏆">
             <section class="glass-panel p-8">
@@ -464,6 +460,7 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
                     <span class="hidden md:inline opacity-30">/</span>
                     <a href="mailto:k.engineeringcaseclub@gmail.com" class="hover:text-glow-pink transition">Email : k.engineeringcaseclub@gmail.com</a>
                 </div>
+                <div class="mt-4 text-[10px] text-star-lavender/50 font-light tracking-widest uppercase">KMITL Lifelong Learning Center</div>
             </div>
         </footer>
 
@@ -534,7 +531,7 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
         }, { threshold: 0.5 });
         document.querySelectorAll('.section-tracker').forEach(el => gameObserver.observe(el));
 
-        // Background Music
+        // Background Music Controls
         let isPlaying = false;
         function toggleMusic() {
             // Hide the hint tooltip when clicked
@@ -547,6 +544,15 @@ tr:hover td { background: rgba(255, 255, 255, 0.08); }
             else { player.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); icon.innerText = '⏸️'; }
             isPlaying = !isPlaying;
         }
+        
+        // Random Playlist Logic
+        const playlistID = "PL2ykJhkoFA1-ZgraHwOdKPXobF2vvElTx";
+        const totalSongs = 15; // ใส่จำนวนเพลงใน Playlist โดยประมาณ
+        const randomIndex = Math.floor(Math.random() * totalSongs);
+
+        // ใส่ URL สุ่มเพลงลงไปใน iframe
+        const bgmPlayer = document.getElementById('bgm-player');
+        bgmPlayer.src = `https://www.youtube.com/embed/videoseries?list=${playlistID}&enablejsapi=1&index=${randomIndex}`;
     </script>
 </body>
 </html>
