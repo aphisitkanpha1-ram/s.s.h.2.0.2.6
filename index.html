@@ -58,14 +58,19 @@
         body {
             background-color: var(--space-bg);
             background-image: 
+                url('https://i.postimg.cc/nczSZsmt/bv17.png'),
                 radial-gradient(circle at 20% 30%, var(--purp-900) 0%, transparent 50%),
                 radial-gradient(circle at 80% 70%, var(--purp-700) 0%, transparent 50%);
-            background-attachment: fixed;
+            background-position: bottom center, top left, bottom right;
+            background-repeat: no-repeat, no-repeat, no-repeat;
+            background-size: 100% auto, auto, auto;
+            background-attachment: scroll, fixed, fixed;
             color: var(--text-main);
             font-family: 'Kanit', sans-serif;
             overflow-x: hidden;
             margin: 0;
             scroll-behavior: smooth;
+            padding-bottom: 5rem;
         }
 
         body::before {
@@ -225,7 +230,7 @@
             transition: all 0.3s ease;
         }
 
-        /* ปุ่มหลัก (ม่วงไล่ระดับ) */
+        /* ปุ่มหลัก */
         .clay-btn {
             display: inline-flex; align-items: center; justify-content: center; 
             padding: 16px 40px;
@@ -272,23 +277,23 @@
                 inset -4px -4px 10px rgba(216, 191, 216, 0.8);
         }
 
-        /* ปุ่มขอบม่วงเข้ม */
+        /* ปุ่มรอง (เข้ากลุ่ม) */
         .clay-btn-outline {
             display: inline-flex; align-items: center; justify-content: center; 
             padding: 16px 40px;
-            background-color: transparent; 
-            color: var(--purp-700); 
+            background-color: var(--purp-100); 
+            color: var(--purp-900); 
             font-weight: 700; font-size: 1.1rem;
             border-radius: 100px; 
-            border: 2px solid var(--purp-500);
+            border: 2px solid var(--purp-300);
             box-shadow: 0 4px 10px rgba(106, 13, 173, 0.1);
             transition: all 0.2s ease;
             cursor: pointer;
         }
         .clay-btn-outline:hover { 
-            background-color: var(--purp-100); 
-            color: var(--purp-900); 
-            border-color: var(--purp-700);
+            background-color: var(--purp-300); 
+            color: var(--white-glow); 
+            border-color: var(--purp-500);
             box-shadow: 0 4px 15px rgba(106, 13, 173, 0.2);
         }
 
@@ -327,7 +332,7 @@
         .faq-item[open] summary::after { transform: rotate(45deg); color: var(--purp-700); }
         .faq-content { padding: 0 24px 20px 24px; color: var(--clay-text-muted); line-height: 1.6; }
 
-        /* [UPDATED] Gemini Star Bullet (ดาว 4 แฉก ไล่สีเกรเดียนต์ ม่วง-ชมพู-ขาว) */
+        /* Gemini Star Bullet (ดาว 4 แฉก ไล่สีเกรเดียนต์ ม่วง-ชมพู-ขาว) */
         .bullet-star {
             position: relative;
             padding-left: 2.25rem;
@@ -338,14 +343,13 @@
             left: 0;
             top: -2px;
             font-size: 1.3rem;
-            /* Gradient for text requires background-clip */
             background: linear-gradient(135deg, #3b0270 0%, #6f00ff 30%, #e9b3fb 70%, #fff1f1 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0px 2px 2px rgba(59, 2, 112, 0.3));
         }
 
-        /* [UPDATED] 5-Color Purple Gradient Prize Text */
+        /* 5-Color Purple Gradient Prize Text */
         .prize-text {
             background: linear-gradient(to bottom, #fff1f1 0%, #e9b3fb 25%, #9370DB 50%, #6f00ff 75%, #3b0270 100%);
             -webkit-background-clip: text;
@@ -366,6 +370,11 @@
            📱 Mobile Optimizations
         ========================================= */
         @media (max-width: 768px) {
+            body {
+                background-size: 150% auto, auto, auto;
+                padding-bottom: 2rem;
+            }
+
             table, thead, tbody, th, td, tr { display: block; }
             thead tr { position: absolute; top: -9999px; left: -9999px; }
             td { position: relative; padding-left: 40%; border-bottom: 1px solid rgba(0, 0, 0, 0.05);}
@@ -546,7 +555,7 @@
             </div>
         </section>
 
-        <footer id="apply" class="clay-panel p-8 md:p-12 text-center reveal">
+        <footer id="apply" class="clay-panel p-8 md:p-12 text-center reveal" style="background-color: rgba(248, 244, 250, 0.95);">
             <h2 class="text-3xl md:text-4xl font-bold mb-4 text-clay-main stagger-1">ลองเปลี่ยนอนาคต…เริ่มที่นี่</h2>
             <p class="text-base md:text-lg text-clay-muted font-medium mb-12 max-w-2xl mx-auto stagger-2">
                 มาร่วมเป็นส่วนหนึ่งของการสร้าง “Safe Space” เพื่อเยาวชนและครอบครัวไทยไปด้วยกัน
@@ -585,7 +594,9 @@
                 <span class="hidden md:inline opacity-50">/</span>
                 <a href="mailto:k.engineeringcaseclub@gmail.com" class="hover:text-accent transition">Email : k.engineeringcaseclub@gmail.com</a>
             </div>
-            <div class="mt-6 text-[10px] font-bold tracking-widest uppercase opacity-80" style="color: var(--purp-500);">KMITL Case Club x B-Lab x CareerVisa</div>
+            <div class="mt-6 flex flex-col items-center gap-2">
+                <div class="text-[10px] font-light tracking-wide text-clay-muted opacity-80">&copy; 2026 Safe Space Hackathon. All rights reserved.</div>
+            </div>
         </footer>
 
     </div>
