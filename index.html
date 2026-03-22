@@ -10,32 +10,56 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* =========================================
-           Design System & Variables
+           Design System & Variables (Monochrome Purple)
         ========================================= */
         :root {
-            --space-darkest: #080016; 
-            --space-mid: #501ebd;
-            --space-peri: #967cff;
-            --glow-pink: #f8c9fd;
-            --nebula-soft: #a58afb;
-            --nebula-orchid: #c190f5;
-            --nebula-violet: #976ae1;
-            --star-lavender: #bca2fe;
-            --terrain-base: #a37ff1;
-            --gold-light: #FDE047;      
-            --gold-dark: #F59E0B;
+            /* User Palette */
+            --purp-900: #2E0854; 
+            --purp-700: #4B0082; 
+            --purp-500: #6A0DAD; 
+            --purp-300: #9370DB; 
+            --purp-100: #D8BFD8; 
+            --white-glow: #FFFFFF;
+            
+            /* Space Background */
+            --space-bg: #1a0530; 
+
+            /* Clay Elements Colors */
+            --clay-card: #f8f4fa; 
+            --clay-box: #ede3f0;
+            
+            /* Text Colors */
             --text-main: #FFFFFF;
-            --text-muted: #E2D5FF; 
-            --glass-bg: rgba(23, 0, 78, 0.4); 
-            --glass-border: rgba(163, 127, 241, 0.3);
+            --text-muted: var(--purp-100); 
+            
+            /* Clay Texts within cards */
+            --clay-text-main: var(--purp-900);
+            --clay-text-muted: var(--purp-500);
+            
+            /* Shadows for Monochrome Theme */
+            --clay-shadow: 20px 20px 40px rgba(46, 8, 84, 0.4); 
+            --clay-inner-light: inset 8px 8px 20px rgba(255, 255, 255, 1); 
+            --clay-inner-dark: inset -6px -6px 16px rgba(106, 13, 173, 0.15);
+            
+            /* Button Shadows */
+            --btn-shadow: 0px 10px 25px rgba(106, 13, 173, 0.4);
+            --btn-inner-light: inset 4px 4px 10px rgba(255, 255, 255, 0.4);
+            --btn-inner-dark: inset -4px -4px 10px rgba(75, 0, 130, 0.3);
         }
 
+        /* Utility Classes */
+        .text-main { color: var(--text-main); }
+        .text-muted { color: var(--text-muted); }
+        .text-clay-main { color: var(--clay-text-main); }
+        .text-clay-muted { color: var(--clay-text-muted); }
+        .text-accent { color: var(--purp-300); }
+        .text-accent-alt { color: var(--purp-500); }
+
         body {
-            background-color: var(--space-darkest);
+            background-color: var(--space-bg);
             background-image: 
-                radial-gradient(circle at 15% 50%, rgba(23, 0, 78, 0.6) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(80, 30, 189, 0.4) 0%, transparent 50%),
-                radial-gradient(circle at 50% 100%, rgba(150, 124, 255, 0.2) 0%, transparent 60%);
+                radial-gradient(circle at 20% 30%, var(--purp-900) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, var(--purp-700) 0%, transparent 50%);
             background-attachment: fixed;
             color: var(--text-main);
             font-family: 'Kanit', sans-serif;
@@ -53,79 +77,68 @@
         /* Web Preloader */
         #preloader {
             position: fixed; inset: 0; z-index: 9999;
-            background-color: var(--space-darkest);
+            background-color: var(--purp-900);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             transition: opacity 0.5s ease;
         }
         .loader-ring {
-            width: 50px; height: 50px; border: 3px solid rgba(248, 201, 253, 0.2);
-            border-top-color: var(--glow-pink); border-radius: 50%;
+            width: 50px; height: 50px; border: 4px solid rgba(216, 191, 216, 0.2);
+            border-top-color: var(--white-glow); border-radius: 50%;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         #progress-bar {
             position: fixed; top: 0; left: 0; height: 3px;
-            background: linear-gradient(to right, var(--star-lavender), var(--glow-pink));
+            background: linear-gradient(to right, var(--purp-300), var(--white-glow));
             z-index: 100; width: 0%; transition: width 0.1s;
+            box-shadow: 0 0 10px var(--white-glow);
         }
 
         /* =========================================
-           GPU Optimized Nebula Blobs
+           Deep Space Blobs
         ========================================= */
         .blob {
             position: fixed; border-radius: 50%; filter: blur(120px); z-index: -3;
-            mix-blend-mode: screen; pointer-events: none; 
-            /* บังคับใช้ GPU ประมวลผล และลดการคำนวณ transform */
-            will-change: opacity, transform;
-            transform: translateZ(0); 
+            mix-blend-mode: screen; 
+            pointer-events: none; 
+            will-change: opacity, transform; transform: translateZ(0); 
             animation: pulseBlob 15s infinite alternate ease-in-out;
         }
-        .blob-1 { width: 50vw; height: 50vw; background: radial-gradient(circle, var(--nebula-orchid) 0%, transparent 70%); top: -10%; left: -10%; opacity: 0.6; }
-        .blob-2 { width: 60vw; height: 60vw; background: radial-gradient(circle, var(--space-mid) 0%, transparent 70%); bottom: -20%; right: -10%; animation-duration: 20s; opacity: 0.5; }
-        .blob-3 { width: 45vw; height: 45vw; background: radial-gradient(circle, var(--glow-pink) 0%, transparent 70%); top: 25%; left: 40%; opacity: 0.3; animation-duration: 25s; filter: blur(150px); }
-        .blob-4 { width: 50vw; height: 50vw; background: radial-gradient(circle, #480692 0%, transparent 70%); bottom: 10%; left: -5%; opacity: 0.15; animation-duration: 18s; }
+        .blob-1 { width: 50vw; height: 50vw; background: var(--purp-700); top: -10%; left: -10%; opacity: 0.4; }
+        .blob-2 { width: 60vw; height: 60vw; background: var(--purp-900); bottom: -20%; right: -10%; animation-duration: 20s; opacity: 0.5; }
+        .blob-3 { width: 45vw; height: 45vw; background: var(--purp-500); top: 25%; left: 40%; opacity: 0.25; animation-duration: 25s; filter: blur(140px); }
 
-        /* เปลี่ยนจากการวิ่งแนวแกน X,Y เป็นแค่การขยายและหรี่แสง (กินสเปกน้อยกว่ามาก) */
         @keyframes pulseBlob {
-            0% { transform: scale(1) translateZ(0); opacity: 0.4; }
-            100% { transform: scale(1.1) translateZ(0); opacity: 0.7; }
-        }
-
-        .galactic-core {
-            position: fixed; top: 50%; left: 50%; width: 150vw; height: 40vw;
-            background: radial-gradient(ellipse at center, rgba(248, 201, 253, 0.25) 0%, rgba(165, 138, 251, 0.1) 40%, transparent 70%);
-            transform: translate(-50%, -50%) rotate(-25deg);
-            filter: blur(80px); z-index: -4; pointer-events: none; mix-blend-mode: screen;
+            0% { transform: scale(1) translateZ(0); opacity: 0.3; }
+            100% { transform: scale(1.1) translateZ(0); opacity: 0.5; }
         }
 
         .stars-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
-                radial-gradient(1.5px 1.5px at 10% 20%, var(--glow-pink), transparent),
-                radial-gradient(1px 1px at 30% 65%, var(--star-lavender), transparent),
-                radial-gradient(2px 2px at 50% 35%, rgba(255,255,255,0.9), transparent),
-                radial-gradient(1px 1px at 70% 80%, var(--glow-pink), transparent),
-                radial-gradient(1.5px 1.5px at 90% 10%, var(--star-lavender), transparent),
-                radial-gradient(1px 1px at 80% 50%, #fff, transparent);
-            background-size: 250px 250px; z-index: -4; opacity: 0.9; 
+                radial-gradient(1.5px 1.5px at 10% 20%, var(--purp-100), transparent),
+                radial-gradient(1px 1px at 30% 65%, var(--white-glow), transparent),
+                radial-gradient(2px 2px at 50% 35%, rgba(255,255,255,1), transparent),
+                radial-gradient(1.5px 1.5px at 70% 80%, var(--purp-300), transparent),
+                radial-gradient(2px 2px at 90% 10%, var(--white-glow), transparent);
+            background-size: 250px 250px; z-index: -4; opacity: 0.7; 
             pointer-events: none;
             animation: pulseStars 5s ease-in-out infinite alternate;
         }
         @keyframes pulseStars {
-            0% { opacity: 0.6; }
-            100% { opacity: 1; filter: drop-shadow(0 0 3px rgba(255,255,255,0.5)); }
+            0% { opacity: 0.5; }
+            100% { opacity: 1; filter: drop-shadow(0 0 3px var(--white-glow)); }
         }
 
         .comet { 
             position: fixed; width: 150px; height: 2px; 
-            background: linear-gradient(90deg, transparent, var(--glow-pink), transparent); 
+            background: linear-gradient(90deg, transparent, var(--white-glow), transparent); 
             z-index: -2; opacity: 0; transform: rotate(-20deg); 
             animation: shoot 8s linear infinite; pointer-events: none; will-change: transform, opacity;
         }
         .comet-1 { top: 20%; left: 80%; animation-delay: 2s; }
-        .comet-2 { top: 60%; left: 30%; width: 100px; animation-duration: 12s; animation-delay: 7s; }
-        .comet-3 { top: 5%; left: 60%; width: 120px; animation-duration: 10s; animation-delay: 0.5s; background: linear-gradient(90deg, transparent, var(--star-lavender), transparent); }
+        .comet-2 { top: 60%; left: 30%; width: 100px; animation-duration: 12s; animation-delay: 7s; background: linear-gradient(90deg, transparent, var(--purp-100), transparent); }
 
         @keyframes shoot { 
             0% { transform: translateX(0) translateY(0) rotate(-20deg); opacity: 0; } 
@@ -144,14 +157,14 @@
         }
         .whale-img { 
             width: 110px; height: auto; 
-            filter: drop-shadow(0 0 10px rgba(248, 201, 253, 0.6)) drop-shadow(0 0 20px rgba(165, 138, 251, 0.4)); 
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3)); 
             animation: whaleBobbing 4s ease-in-out infinite alternate;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
             will-change: transform, filter;
         }
         #space-whale:hover .whale-img {
             transform: scale(1.15) rotate(-5deg);
-            filter: drop-shadow(0 0 15px rgba(248, 201, 253, 0.9)) drop-shadow(0 0 30px rgba(165, 138, 251, 0.7)); 
+            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6)); 
         }
 
         @keyframes whaleFlowAcross { 
@@ -162,7 +175,7 @@
         }
         @keyframes whaleRunAway {
             0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
-            8% { transform: translate(5px, -15px) scale(1.25) rotate(-5deg); opacity: 1; filter: drop-shadow(0 0 30px rgba(247, 241, 255, 0.8)); } 
+            8% { transform: translate(5px, -15px) scale(1.25) rotate(-5deg); opacity: 1; filter: drop-shadow(0 0 20px var(--white-glow)); } 
             20% { transform: translate(-25px, 20px) scale(1.1) rotate(-15deg); opacity: 1; } 
             100% { transform: translate(150vw, -80vh) scale(0.4) rotate(25deg) scaleX(1.4); opacity: 0; filter: blur(3px); } 
         }
@@ -174,86 +187,199 @@
         /* Secret Link Popup */
         #secret-popup {
             position: fixed; bottom: 40px; right: 40px; z-index: 1000;
-            background: rgba(23, 0, 78, 0.85); backdrop-filter: blur(20px);
-            border: 1px solid var(--glow-pink); border-radius: 20px; padding: 20px;
-            box-shadow: 0 15px 40px rgba(248, 201, 253, 0.4);
+            background: var(--clay-card);
+            border-radius: 28px; padding: 20px 24px;
+            box-shadow: var(--clay-shadow), var(--clay-inner-dark), var(--clay-inner-light);
+            border: 2px solid rgba(255,255,255,0.8);
             transform: translateY(150px); opacity: 0; pointer-events: none;
             transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: var(--clay-text-main); 
         }
         #secret-popup.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
 
         /* =========================================
-           UI Components
+           UI Components : CLAYMORPHISM (Monochrome)
         ========================================= */
-        .glass-panel {
-            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); border-radius: 24px;
-            box-shadow: 0 8px 32px 0 rgba(23, 0, 78, 0.5); transition: all 0.3s ease;
+        .clay-panel {
+            background-color: var(--clay-card);
+            border-radius: 40px;
+            box-shadow: 
+                var(--clay-shadow),
+                var(--clay-inner-dark),
+                var(--clay-inner-light);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            color: var(--clay-text-main); 
         }
-        .glass-panel:hover { transform: translateY(-5px); box-shadow: 0 12px 40px 0 rgba(165, 138, 251, 0.2); }
+        .clay-panel .text-text-muted { color: var(--clay-text-muted); }
 
-        .btn-primary {
-            display: inline-flex; align-items: center; justify-content: center; padding: 16px 40px;
-            background: linear-gradient(45deg, var(--space-mid), var(--nebula-orchid)); color: white; font-weight: 500;
-            border-radius: 100px; box-shadow: 0 8px 20px rgba(150, 124, 255, 0.3); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            border: 1px solid rgba(255,255,255,0.2);
+        .clay-box {
+            background-color: var(--clay-box);
+            border-radius: 24px;
+            box-shadow: 
+                8px 8px 20px rgba(46, 8, 84, 0.08),
+                inset -4px -4px 10px rgba(106, 13, 173, 0.08),
+                inset 4px 4px 10px rgba(255, 255, 255, 1);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
         }
-        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 12px 25px rgba(248, 201, 253, 0.4); }
 
+        /* ปุ่มหลัก (ม่วงไล่ระดับ) */
+        .clay-btn {
+            display: inline-flex; align-items: center; justify-content: center; 
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--purp-300), var(--purp-500)); 
+            color: #ffffff; 
+            font-weight: 600; font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            border-radius: 100px; 
+            box-shadow: var(--btn-shadow), var(--btn-inner-dark), var(--btn-inner-light);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+        }
+        .clay-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0px 15px 30px rgba(106, 13, 173, 0.5), var(--btn-inner-dark), var(--btn-inner-light);
+        }
+        .clay-btn:active {
+            transform: scale(0.96) translateY(2px);
+            box-shadow: 0px 5px 10px rgba(106, 13, 173, 0.3), inset -2px -2px 8px rgba(75, 0, 130, 0.2), inset 4px 4px 10px rgba(255, 255, 255, 0.4);
+        }
+
+        /* ปุ่มสีขาวสว่างทะลุจอ */
+        .clay-btn-white {
+            display: inline-flex; align-items: center; justify-content: center; 
+            padding: 16px 40px;
+            background: var(--white-glow); 
+            color: var(--purp-900); 
+            font-weight: 700; font-size: 1.1rem;
+            border-radius: 100px; 
+            box-shadow: 
+                0 0 25px rgba(255, 255, 255, 0.4), 
+                inset 4px 4px 10px rgba(255, 255, 255, 1), 
+                inset -4px -4px 10px rgba(216, 191, 216, 0.8);
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .clay-btn-white:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 
+                0 0 35px rgba(255, 255, 255, 0.6), 
+                inset 4px 4px 10px rgba(255, 255, 255, 1), 
+                inset -4px -4px 10px rgba(216, 191, 216, 0.8);
+        }
+
+        /* ปุ่มขอบม่วงเข้ม */
+        .clay-btn-outline {
+            display: inline-flex; align-items: center; justify-content: center; 
+            padding: 16px 40px;
+            background-color: transparent; 
+            color: var(--purp-700); 
+            font-weight: 700; font-size: 1.1rem;
+            border-radius: 100px; 
+            border: 2px solid var(--purp-500);
+            box-shadow: 0 4px 10px rgba(106, 13, 173, 0.1);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .clay-btn-outline:hover { 
+            background-color: var(--purp-100); 
+            color: var(--purp-900); 
+            border-color: var(--purp-700);
+            box-shadow: 0 4px 15px rgba(106, 13, 173, 0.2);
+        }
+
+        /* ตารางสไตล์ Clay Monochrome */
         .table-wrapper {
-            width: 100%; margin-top: 1rem; background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px; border: 1px solid var(--glass-border); overflow: hidden; 
+            width: 100%; margin-top: 1rem; 
+            background: var(--clay-box);
+            border-radius: 24px; 
+            box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.03), inset -4px -4px 10px rgba(255,255,255,1);
+            border: 2px solid rgba(255,255,255,0.6);
+            overflow: hidden; 
         }
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 16px 24px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        th { background: rgba(23, 0, 78, 0.6); font-weight: 500; color: var(--glow-pink); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
+        th, td { padding: 18px 24px; text-align: left; }
+        th { 
+            background: rgba(147, 112, 219, 0.15); 
+            font-weight: 600; color: var(--purp-700); 
+            text-transform: uppercase; font-size: 0.95rem; letter-spacing: 1px; 
+        }
+        td { border-bottom: 1px solid rgba(147, 112, 219, 0.15); }
         tr:last-child td { border-bottom: none; }
-        tr:hover td { background: rgba(255, 255, 255, 0.08); }
+        tr:hover td { background: rgba(147, 112, 219, 0.05); }
+
+        /* FAQ */
+        .faq-item { 
+            background: var(--clay-box); 
+            border-radius: 20px; margin-bottom: 16px; 
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.03), inset 3px 3px 8px rgba(255,255,255,1);
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: all 0.3s ease; 
+        }
+        .faq-item[open] { background: var(--clay-card); }
+        .faq-item summary { padding: 20px 24px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--clay-text-main); }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary::after { content: '+'; color: var(--purp-500); font-size: 1.5rem; transition: transform 0.3s ease; }
+        .faq-item[open] summary::after { transform: rotate(45deg); color: var(--purp-700); }
+        .faq-content { padding: 0 24px 20px 24px; color: var(--clay-text-muted); line-height: 1.6; }
+
+        /* [UPDATED] Gemini Star Bullet (ดาว 4 แฉก ไล่สีเกรเดียนต์ ม่วง-ชมพู-ขาว) */
+        .bullet-star {
+            position: relative;
+            padding-left: 2.25rem;
+        }
+        .bullet-star::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-size: 1.3rem;
+            /* Gradient for text requires background-clip */
+            background: linear-gradient(135deg, #3b0270 0%, #6f00ff 30%, #e9b3fb 70%, #fff1f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 2px rgba(59, 2, 112, 0.3));
+        }
+
+        /* [UPDATED] 5-Color Purple Gradient Prize Text */
+        .prize-text {
+            background: linear-gradient(to bottom, #fff1f1 0%, #e9b3fb 25%, #9370DB 50%, #6f00ff 75%, #3b0270 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900; 
+            letter-spacing: -2px;
+            filter: drop-shadow(2px 4px 8px rgba(59, 2, 112, 0.4)) drop-shadow(0 0 20px rgba(111, 0, 255, 0.3));
+        }
 
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
-
-        .prize-text {
-            background: linear-gradient(to bottom, #FFF9C4 0%, #FDE047 40%, #F59E0B 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 5px rgba(253, 224, 71, 0.5)) drop-shadow(0 0 20px rgba(245, 158, 11, 0.4));
-            font-weight: 800; letter-spacing: -2px;
-        }
-
-        .faq-item { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 16px; margin-bottom: 12px; transition: all 0.3s ease; }
-        .faq-item[open] { background: rgba(165, 138, 251, 0.1); border-color: var(--star-lavender); }
-        .faq-item summary { padding: 20px 24px; font-weight: 500; list-style: none; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: white; }
-        .faq-item summary::-webkit-details-marker { display: none; }
-        .faq-item summary::after { content: '+'; color: var(--glow-pink); font-size: 1.5rem; transition: transform 0.3s ease; }
-        .faq-item[open] summary::after { transform: rotate(45deg); color: var(--star-lavender); }
-        .faq-content { padding: 0 24px 20px 24px; font-weight: 300; color: var(--text-muted); line-height: 1.6; }
-
         .stagger-1 { opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s forwards; }
         .stagger-2 { opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s forwards; }
         .stagger-3 { opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* =========================================
-           📱 Mobile Optimizations (Anti-Lag & UI)
+           📱 Mobile Optimizations
         ========================================= */
         @media (max-width: 768px) {
             table, thead, tbody, th, td, tr { display: block; }
             thead tr { position: absolute; top: -9999px; left: -9999px; }
-            td { position: relative; padding-left: 40%; border-bottom: 1px solid rgba(255,255,255,0.05); }
-            td::before { position: absolute; top: 16px; left: 16px; width: 35%; font-weight: 500; font-size: 0.85rem; color: var(--glow-pink); }
-            td:nth-of-type(1)::before { content: "กิจกรรม"; } td:nth-of-type(2)::before { content: "วันที่ / เวลา"; } td:nth-of-type(3)::before { content: "สถานที่"; }
+            td { position: relative; padding-left: 40%; border-bottom: 1px solid rgba(0, 0, 0, 0.05);}
+            td::before { position: absolute; top: 18px; left: 16px; width: 35%; font-weight: 600; font-size: 0.85rem; color: var(--purp-700); }
+            td:nth-of-type(1)::before { content: "กิจกรรม"; } td:nth-of-type(2)::before { content: "วันที่/เวลา"; } td:nth-of-type(3)::before { content: "สถานที่"; }
             
-            /* ลดภาระเครื่องด้วยการซ่อน Blob วงที่ 3 และ 4, ลดความเบลอวงที่เหลือ */
-            .blob-3, .blob-4 { display: none !important; }
-            .blob-1, .blob-2 { filter: blur(60px) !important; }
-            .galactic-core { filter: blur(40px) !important; }
-
-            /* ปรับขนาดปุ่มเพลงให้เล็กลง ไม่เกะกะจอ */
-            #music-btn { bottom: 20px !important; left: 16px !important; padding: 8px !important; }
-            #music-icon { width: 28px; height: 28px; font-size: 10px; }
-            #music-hint { bottom: 65px !important; left: 16px !important; font-size: 10px !important; padding: 4px 10px !important; }
+            .blob-3 { display: none !important; }
+            .blob-1, .blob-2 { filter: blur(70px) !important; opacity: 0.2; }
             
-            .glass-panel { padding: 1.5rem !important; }
+            #music-btn { bottom: 20px !important; left: 16px !important; padding: 12px !important; border-radius: 50% !important; }
+            #music-icon { width: 24px; height: 24px; font-size: 12px; }
+            #music-hint { bottom: 75px !important; left: 16px !important; }
+            
+            .clay-panel { padding: 1.5rem !important; border-radius: 32px; }
             #space-whale .whale-img { width: 70px; }
             #secret-popup { bottom: 24px; right: 20px; left: 20px; transform: translateY(150px); }
         }
@@ -263,16 +389,13 @@
 
     <div id="preloader">
         <div class="loader-ring mb-4"></div>
-        <div class="text-glow-pink font-light tracking-widest text-sm animate-pulse uppercase">Entering Safe Space...</div>
+        <div class="font-bold tracking-widest text-sm animate-pulse uppercase text-main">Entering Safe Space...</div>
     </div>
 
     <div id="progress-bar"></div>
-    <div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div><div class="blob blob-4"></div>
-    
-    <div class="galactic-core"></div>
+    <div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
     <div class="stars-bg"></div>
-    
-    <div class="comet comet-1"></div><div class="comet comet-2"></div><div class="comet comet-3"></div>
+    <div class="comet comet-1"></div><div class="comet comet-2"></div>
 
     <div id="space-whale" class="hidden">
         <img src="https://i.postimg.cc/m2HJRxxD/bv14.png" alt="Space Whale" class="whale-img" id="whale-img">
@@ -281,123 +404,136 @@
     <div id="secret-popup" class="flex items-center gap-4">
         <div class="text-3xl md:text-4xl">🐳</div>
         <div>
-            <h3 class="text-glow-pink font-bold text-xs md:text-sm uppercase tracking-widest mb-1">You Found The Star Chart!</h3>
-            <p class="text-[10px] md:text-xs text-text-muted font-light mb-3">น้อง Milo ได้ดรอปบางอย่างเอาไว้ให้คุณได้ลองค้นหา</p>
-            <a href="https://drive.google.com/drive/folders/1DbOPqMuR9cQpg9pPfja8slz5alXw05DQ?usp=drive_link" target="_blank" class="inline-block bg-white text-black text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.5)] transition hover:scale-105">
+            <h3 class="font-bold text-xs md:text-sm uppercase tracking-widest mb-1 text-accent-alt">You Found The Star Chart!</h3>
+            <p class="text-[10px] md:text-xs text-clay-muted font-medium mb-3">น้อง Milo ได้ดรอปบางอย่างเอาไว้ให้คุณได้ลองค้นหา</p>
+            <a href="https://drive.google.com/drive/folders/1DbOPqMuR9cQpg9pPfja8slz5alXw05DQ?usp=drive_link" target="_blank" class="clay-btn !py-2 !px-4 !text-[10px] md:!text-xs">
                 🎁 เปิดคลังสมบัติ (Elements)
             </a>
         </div>
-        <button onclick="document.getElementById('secret-popup').classList.remove('show')" class="absolute top-2 right-3 text-text-muted hover:text-white text-lg">✕</button>
+        <button onclick="document.getElementById('secret-popup').classList.remove('show')" class="absolute top-3 right-4 text-clay-muted font-bold hover:text-purp-700 text-lg">✕</button>
     </div>
 
-    <div id="music-hint" class="fixed bottom-20 left-6 z-40 bg-glow-pink text-space-darkest text-xs font-bold px-3 py-1 rounded-full animate-bounce shadow-[0_0_15px_rgba(248,201,253,0.5)] transition-opacity duration-300 pointer-events-none before:content-[''] before:absolute before:top-full before:left-4 before:border-[6px] before:border-transparent before:border-t-glow-pink">
+    <div id="music-hint" class="fixed bottom-24 left-6 z-40 text-main text-xs font-bold px-4 py-2 rounded-2xl animate-bounce shadow-[0_0_15px_rgba(255,255,255,0.3)] pointer-events-none" style="background-color: var(--purp-500);">
         เปิดเพลงเพื่ออรรถรส 🎵
     </div>
 
-    <div id="music-btn" role="button" aria-label="Play or pause background music" tabindex="0" class="fixed bottom-6 left-6 z-40 glass-panel !rounded-full px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-white/10 transition border-star-lavender/30" onclick="toggleMusic()" onkeydown="if(event.key==='Enter') toggleMusic()">
-        <div id="music-icon" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm border border-white/20">▶️</div>
-        <div class="text-xs font-light text-white hidden md:block">Space Vibe</div>
+    <div id="music-btn" role="button" aria-label="Play or pause background music" tabindex="0" class="fixed bottom-6 left-6 z-40 clay-box !rounded-full px-5 py-3 flex items-center gap-3 cursor-pointer" onclick="toggleMusic()" onkeydown="if(event.key==='Enter') toggleMusic()">
+        <div id="music-icon" class="w-8 h-8 rounded-full flex items-center justify-center text-sm bg-white" style="color: var(--purp-500); box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);">⏳</div>
+        <div class="text-sm font-bold hidden md:block text-clay-main">Space Vibe</div>
     </div>
     
     <div id="bgm-player" class="hidden"></div>
 
-    <nav class="fixed w-full top-0 z-50 glass-panel !rounded-none !border-x-0 !border-t-0 py-3 px-6 stagger-1">
+    <nav class="fixed w-full top-0 z-50 clay-panel !rounded-none !border-x-0 !border-t-0 py-3 px-6 stagger-1 !shadow-sm">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="hidden md:flex gap-6 text-sm text-text-muted font-light">
-                <a href="#overview" class="hover:text-white transition">เกี่ยวกับ</a>
-                <a href="#timeline" class="hover:text-white transition">ไทม์ไลน์</a>
-                <a href="#criteria" class="hover:text-white transition">คุณสมบัติ</a>
-                <a href="#faq" class="hover:text-white transition">คำถามที่พบบ่อย</a>
+            <div class="hidden md:flex gap-8 text-sm font-medium">
+                <a href="#overview" class="text-clay-main hover:text-accent transition">เกี่ยวกับ</a>
+                <a href="#timeline" class="text-clay-main hover:text-accent transition">ไทม์ไลน์</a>
+                <a href="#criteria" class="text-clay-main hover:text-accent transition">คุณสมบัติ</a>
+                <a href="#faq" class="text-clay-main hover:text-accent transition">คำถามที่พบบ่อย</a>
             </div>
-            <div class="flex items-center gap-2 p-2 px-3 bg-white/95 rounded-full shadow-inner border border-white/20 ml-auto md:ml-0">
-                <img src="https://i.postimg.cc/NGRF4rTj/D9D2BEC5-6591-4AD5-82E1-1ED6E09F30EC.jpg" class="h-5 rounded" alt="KMITL Case Club">
-                <span class="text-[10px] text-space-dark/50 font-bold">x</span>
-                <img src="https://i.postimg.cc/fWdtrP49/Gemini-Generated-Image-8irjgs8irjgs8irj.png" class="h-5 rounded" alt="B-LAB">
-                <span class="text-[10px] text-space-dark/50 font-bold">x</span>
-                <img src="https://i.postimg.cc/441ZyvVb/bv12.png" class="h-5 rounded" alt="CareerVisa">
+            <div class="flex items-center gap-2 p-2 px-4 clay-box !rounded-full ml-auto md:ml-0">
+                <img src="https://i.postimg.cc/NGRF4rTj/D9D2BEC5-6591-4AD5-82E1-1ED6E09F30EC.jpg" class="h-5 rounded-md" alt="KMITL Case Club">
+                <span class="text-[10px] text-clay-muted font-bold mx-1">x</span>
+                <img src="https://i.postimg.cc/fWdtrP49/Gemini-Generated-Image-8irjgs8irjgs8irj.png" class="h-5 rounded-md" alt="B-LAB">
+                <span class="text-[10px] text-clay-muted font-bold mx-1">x</span>
+                <img src="https://i.postimg.cc/441ZyvVb/bv12.png" class="h-5 rounded-md" alt="CareerVisa">
             </div>
         </div>
     </nav>
 
-    <header class="pt-32 pb-12 flex flex-col items-center justify-center px-6 relative z-10 text-center">
-        <img src="https://i.postimg.cc/tTt2jN74/bv13.png" class="w-64 md:w-[32rem] mb-6 drop-shadow-[0_0_40px_rgba(248,201,253,0.2)] stagger-1" alt="Safe Space Logo">
-        <p class="text-lg md:text-2xl mb-8 text-text-muted font-light leading-relaxed max-w-2xl stagger-2 mt-4">
+    <header class="pt-36 pb-12 flex flex-col items-center justify-center px-6 relative z-10 text-center">
+        <img src="https://i.postimg.cc/tTt2jN74/bv13.png" class="w-64 md:w-[32rem] mb-6 drop-shadow-xl stagger-1" alt="Safe Space Logo" style="filter: drop-shadow(0 0 30px rgba(255,255,255,0.2));">
+        <p class="text-lg md:text-xl mb-10 text-muted font-medium leading-relaxed max-w-2xl stagger-2 mt-4">
             ร่วมประชันไอเดียนวัตกรรมด้านสุขภาพจิตที่เริ่มต้นจาก “ความเข้าใจ” เพื่อหยุดวงจรบาดแผลในครอบครัว
         </p>
         
-        <div class="flex flex-wrap justify-center gap-3 md:gap-6 mb-10 stagger-3 mt-4">
-            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-4 py-2 md:px-5 md:py-3 min-w-[70px] md:min-w-[80px] backdrop-blur-md">
-                <div id="cd-days" class="text-2xl md:text-3xl font-bold text-glow-pink">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Days</div>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-6 mb-12 stagger-3 mt-2">
+            <div class="clay-box px-4 py-3 md:px-6 md:py-4 min-w-[75px] md:min-w-[90px]">
+                <div id="cd-days" class="text-3xl md:text-4xl font-bold text-accent-alt">00</div><div class="text-[10px] text-clay-muted font-bold uppercase tracking-widest mt-1">Days</div>
             </div>
-            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-4 py-2 md:px-5 md:py-3 min-w-[70px] md:min-w-[80px] backdrop-blur-md">
-                <div id="cd-hours" class="text-2xl md:text-3xl font-bold text-white">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Hours</div>
+            <div class="clay-box px-4 py-3 md:px-6 md:py-4 min-w-[75px] md:min-w-[90px]">
+                <div id="cd-hours" class="text-3xl md:text-4xl font-bold text-accent-alt">00</div><div class="text-[10px] text-clay-muted font-bold uppercase tracking-widest mt-1">Hours</div>
             </div>
-            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-4 py-2 md:px-5 md:py-3 min-w-[70px] md:min-w-[80px] backdrop-blur-md">
-                <div id="cd-mins" class="text-2xl md:text-3xl font-bold text-white">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Mins</div>
+            <div class="clay-box px-4 py-3 md:px-6 md:py-4 min-w-[75px] md:min-w-[90px]">
+                <div id="cd-mins" class="text-3xl md:text-4xl font-bold text-accent-alt">00</div><div class="text-[10px] text-clay-muted font-bold uppercase tracking-widest mt-1">Mins</div>
             </div>
-            <div class="bg-space-darkest/50 border border-star-lavender/20 rounded-2xl px-4 py-2 md:px-5 md:py-3 min-w-[70px] md:min-w-[80px] backdrop-blur-md">
-                <div id="cd-secs" class="text-2xl md:text-3xl font-bold text-nebula-soft">00</div><div class="text-[10px] text-star-lavender uppercase tracking-widest mt-1">Secs</div>
+            <div class="clay-box px-4 py-3 md:px-6 md:py-4 min-w-[75px] md:min-w-[90px]">
+                <div id="cd-secs" class="text-3xl md:text-4xl font-bold text-accent-alt">00</div><div class="text-[10px] text-clay-muted font-bold uppercase tracking-widest mt-1">Secs</div>
             </div>
         </div>
 
         <div class="flex flex-col md:flex-row gap-4 stagger-3 w-full md:w-auto">
-            <a href="#apply" class="btn-primary w-full md:w-auto" id="main-cta">สมัครเลย!</a>
-            <a href="https://drive.google.com/drive/folders/1DbOPqMuR9cQpg9pPfja8slz5alXw05DQ?usp=drive_link" target="_blank" class="px-8 py-4 rounded-full border border-star-lavender flex items-center justify-center font-medium transition hover:bg-white/10 text-text-muted hover:text-white w-full md:w-auto">อ่าน Booklet</a>
+            <a href="#apply" class="clay-btn w-full md:w-auto" id="main-cta">สมัครเลย!</a>
+            <a href="https://drive.google.com/drive/folders/1DbOPqMuR9cQpg9pPfja8slz5alXw05DQ?usp=drive_link" target="_blank" class="clay-btn-white w-full md:w-auto">อ่าน Booklet</a>
         </div>
     </header>
 
-    <div class="max-w-6xl mx-auto px-4 md:px-6 pb-32 md:pb-40 space-y-12 md:space-y-24 relative z-10">
-        <section id="overview" class="glass-panel p-6 md:p-12 reveal" >
-            <div class="flex items-center gap-4 mb-6"><div class="text-2xl md:text-3xl bg-space-mid/80 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full border border-star-lavender/30 shadow-[0_0_15px_rgba(150,124,255,0.3)]">💡</div><h2 class="text-xl md:text-2xl font-bold text-white">เฟ้นหาไอเดียแก้ปัญหาสุขภาพจิต</h2></div>
-            <p class="text-base md:text-lg leading-relaxed text-text-muted font-light">Safe Space Hackathon 2026 : Heart Glow คือเวทีที่เปิดโอกาสให้เยาวชนและนักศึกษา ร่วมกันออกแบบ “ทางออกของปัญหาสุขภาพจิตในครอบครัว” เพื่อหยุดวงจรปัญหาที่เกิดจากความไม่เข้าใจ และพัฒนาแนวทางที่สามารถนำไปใช้ได้จริงในชีวิตประจำวัน โดยไม่จำกัดรูปแบบของนวัตกรรม ไม่ว่าจะเป็นเทคโนโลยี กิจกรรม เครื่องมือ สื่อสร้างสรรค์ พื้นที่การเรียนรู้ หรือรูปแบบการสื่อสารใหม่ ๆ ขอเพียงเป็นแนวทางที่ ช่วยสร้างความเข้าใจระหว่างคนในครอบครัว และนำไปสู่การเปลี่ยนแปลงที่ยั่งยืนในระยะยาว</p>
+    <div class="max-w-6xl mx-auto px-4 md:px-6 pb-32 md:pb-40 space-y-16 md:space-y-24 relative z-10">
+        
+        <section id="overview" class="clay-panel p-8 md:p-12 reveal" >
+            <div class="flex items-center gap-4 mb-6">
+                <div class="text-2xl md:text-3xl clay-box w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl !rounded-tr-md">💡</div>
+                <h2 class="text-2xl md:text-3xl font-bold text-clay-main">เฟ้นหาไอเดียแก้ปัญหาสุขภาพจิต</h2>
+            </div>
+            <p class="text-base md:text-lg leading-relaxed text-clay-muted font-medium">Safe Space Hackathon 2026 : Heart Glow คือเวทีที่เปิดโอกาสให้เยาวชนและนักศึกษา ร่วมกันออกแบบ “ทางออกของปัญหาสุขภาพจิตในครอบครัว” เพื่อหยุดวงจรปัญหาที่เกิดจากความไม่เข้าใจ และพัฒนาแนวทางที่สามารถนำไปใช้ได้จริงในชีวิตประจำวัน โดยไม่จำกัดรูปแบบของนวัตกรรม ไม่ว่าจะเป็นเทคโนโลยี กิจกรรม เครื่องมือ สื่อสร้างสรรค์ พื้นที่การเรียนรู้ หรือรูปแบบการสื่อสารใหม่ ๆ ขอเพียงเป็นแนวทางที่ ช่วยสร้างความเข้าใจระหว่างคนในครอบครัว และนำไปสู่การเปลี่ยนแปลงที่ยั่งยืนในระยะยาว</p>
         </section>
 
-        <section id="timeline" class="glass-panel p-6 md:p-12 reveal">
-            <h2 class="text-xl md:text-2xl font-bold mb-6 text-white">ไทม์ไลน์</h2>
+        <section id="timeline" class="clay-panel p-8 md:p-12 reveal">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-2xl md:text-3xl clay-box w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl !rounded-tr-md">📅</div>
+                <h2 class="text-2xl md:text-3xl font-bold text-clay-main">ไทม์ไลน์</h2>
+            </div>
             <div class="table-wrapper">
                 <table>
-                    <thead><tr><th>กิจกรรม</th><th>วันที่ / เวลา</th><th>สถานที่ / รูปแบบ</th></tr></thead>
-                    <tbody class="font-light text-sm md:text-base">
+                    <thead><tr><th>กิจกรรม</th><th>วันที่/เวลา</th><th>สถานที่/รูปแบบ</th></tr></thead>
+                    <tbody class="font-medium text-sm md:text-base text-clay-muted">
                         <tr><td>เปิดรับสมัคร</td><td>1 ต.ค. - 31 ต.ค. 69</td><td>ช่องทางออนไลน์</td></tr>
-                        <tr><td>ประกาศผล 50 ทีม / 20 ทีม</td><td>2 พ.ย. / 5 พ.ย. 69</td><td>ช่องทางออนไลน์</td></tr>
-                        <tr class="bg-space-mid/30"><td class="text-glow-pink font-medium">Bootcamp Day</td><td class="text-white font-medium">14 พ.ย. 69</td><td>KMITL (บังคับ)</td></tr>
+                        <tr><td>ประกาศผล 50 ทีม/20 ทีม</td><td>2 พ.ย. / 5 พ.ย. 69</td><td>ช่องทางออนไลน์</td></tr>
+                        <tr><td class="font-bold text-accent-alt">Bootcamp Day</td><td class="font-bold text-clay-main">14 พ.ย. 69</td><td>KMITL (บังคับ)</td></tr>
                         <tr><td>ประกาศผล 10 ทีม / Mentoring</td><td>20 พ.ย. / 25 พ.ย. 69</td><td>Online Meeting</td></tr>
-                        <tr class="bg-space-mid/30"><td class="text-glow-pink font-medium">Final Pitching Day</td><td class="text-white font-medium">30 พ.ย. 69 <span class="text-xs font-light text-star-lavender block">(08:00 - 16:00 น.)</span></td><td>KMITL Lifelong Learning Center</td></tr>
+                        <tr><td class="font-bold text-accent-alt">Final Pitching Day</td><td class="font-bold text-clay-main">30 พ.ย. 69 <span class="text-xs font-normal block mt-1">(08:00 - 16:00 น.)</span></td><td>KMITL Lifelong Learning Center</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <div id="criteria" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 reveal">
-            <section class="glass-panel p-6 md:p-8">
-                <h2 class="text-lg md:text-xl font-bold mb-6 text-white">เกณฑ์การสมัครและการส่งผลงาน</h2>
-                <ul class="space-y-4 font-light text-sm md:text-base text-text-main">
-                    <li class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2.5 before:w-2 before:h-2 before:bg-glow-pink before:rounded-full before:shadow-[0_0_8px_var(--glow-pink)]">อายุ <strong>15-23 ปี</strong> (นักเรียน/นักศึกษา)</li>
-                    <li class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2.5 before:w-2 before:h-2 before:bg-glow-pink before:rounded-full before:shadow-[0_0_8px_var(--glow-pink)]">สมัครเป็นทีม : <strong>3-4 คน</strong> (ต่างสถาบันได้)</li>
-                    <li class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2.5 before:w-2 before:h-2 before:bg-glow-pink before:rounded-full before:shadow-[0_0_8px_var(--glow-pink)]">ค่าสมัคร : <strong>500 บาท/ทีม</strong> (รับเกียรติบัตรทุกคน)</li>
-                    <li class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2.5 before:w-2 before:h-2 before:bg-glow-pink before:rounded-full before:shadow-[0_0_8px_var(--glow-pink)]">สไลด์ Presentation : ไม่เกิน <strong>10 หน้า</strong></li>
-                    <li class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2.5 before:w-2 before:h-2 before:bg-glow-pink before:rounded-full before:shadow-[0_0_8px_var(--glow-pink)]">เอกสาร Executive Summary : ไม่เกิน <strong>500 คำ</strong></li>
+        <div id="criteria" class="grid grid-cols-1 md:grid-cols-2 gap-8 reveal">
+            <section class="clay-panel p-8 md:p-10">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="text-2xl md:text-3xl clay-box w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl !rounded-tr-md">🎯</div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-clay-main">เกณฑ์การสมัครและการส่งผลงาน</h2>
+                </div>
+                <ul class="space-y-5 font-medium text-sm md:text-base text-clay-muted">
+                    <li class="bullet-star">อายุ <strong class="text-clay-main">15-23 ปี</strong> (นักเรียน/นักศึกษา)</li>
+                    <li class="bullet-star">สมัครเป็นทีม : <strong class="text-clay-main">3-4 คน</strong> (ต่างสถาบันได้)</li>
+                    <li class="bullet-star">ค่าสมัคร : <strong class="text-clay-main">500 บาท/ทีม</strong> (รับเกียรติบัตรทุกคน)</li>
+                    <li class="bullet-star">สไลด์ Presentation : ไม่เกิน <strong class="text-clay-main">10 หน้า</strong></li>
+                    <li class="bullet-star">เอกสาร Executive Summary : ไม่เกิน <strong class="text-clay-main">500 คำ</strong></li>
                 </ul>
             </section>
 
-            <section class="glass-panel p-6 md:p-8 text-center flex flex-col justify-center items-center overflow-hidden border-gold-dark/30">
-                <h2 class="text-xs md:text-sm font-bold text-gold-light uppercase tracking-widest mb-4 opacity-80">ชิงเงินรางวัลรวมกว่า</h2>
-                <div class="prize-container flex flex-col items-center justify-center">
-                    <div class="prize-text text-5xl md:text-7xl mb-2">100,000</div>
-                    <div class="text-xl md:text-2xl font-bold text-gold-light drop-shadow-md">บาท</div>
+            <section class="clay-panel p-8 md:p-10 text-center flex flex-col justify-center items-center">
+                <h2 class="text-sm md:text-base font-bold uppercase tracking-widest mb-4 text-black">ชิงเงินรางวัลรวมกว่า</h2>
+                <div class="flex flex-col items-center justify-center mb-6">
+                    <div class="prize-text text-6xl md:text-7xl mb-2">100,000</div>
+                    <div class="text-xl md:text-2xl font-bold mt-2 text-black">บาท</div>
                 </div>
-                <p class="text-text-muted font-light text-xs md:text-sm mt-6 bg-space-darkest/40 px-4 py-2 rounded-full border border-white/5">
-                    พร้อมโอกาสพิเศษในการพัฒนาไอเดียต่อยอดร่วมกับ <strong class="text-white">CareerVisa</strong>
-                </p>
+                <div class="clay-box px-6 py-3 font-medium text-xs md:text-sm inline-block text-black">
+                    พร้อมโอกาสพิเศษในการพัฒนาไอเดียต่อยอดร่วมกับ <strong class="text-black">CareerVisa</strong>
+                </div>
             </section>
         </div>
 
-        <section id="faq" class="glass-panel p-6 md:p-12 reveal">
-            <h2 class="text-xl md:text-2xl font-bold text-white mb-8">คำถามที่พบบ่อย</h2>
-            <div class="space-y-4">
+        <section id="faq" class="clay-panel p-8 md:p-12 reveal">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-2xl md:text-3xl clay-box w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl !rounded-tr-md">💬</div>
+                <h2 class="text-2xl md:text-3xl font-bold text-clay-main">คำถามที่พบบ่อย</h2>
+            </div>
+            <div class="space-y-5">
                 <details class="faq-item">
                     <summary>จำเป็นต้องมีพื้นฐานการเขียนโปรแกรม (Coding) หรือไม่ ?</summary>
-                    <div class="faq-content text-sm md:text-base">ไม่จำเป็น การแข่งขันมุ่งเน้นที่การคิดค้นโซลูชันเพื่อแก้ปัญหาสุขภาพจิต ซึ่งสามารถออกมาในรูปแบบของแคมเปญ กิจกรรม หรือกระบวนการต่างๆ นอกเหนือจากเทคโนโลยีได้</div>
+                    <div class="faq-content text-sm md:text-base">ไม่จำเป็น การแข่งขันมุ่งเน้นที่การคิดค้นโซลูชันเพื่อแก้ปัญหาสุขภาพจิต ซึ่งสามารถออกมาในรูปแบบของแคมเปญ กิจกรรม หรือกระบวนการต่าง ๆ นอกเหนือจากเทคโนโลยีได้</div>
                 </details>
                 <details class="faq-item">
                     <summary>สามารถรวมทีมกับเพื่อนต่างโรงเรียนหรือต่างมหาวิทยาลัยได้หรือไม่ ?</summary>
@@ -410,56 +546,51 @@
             </div>
         </section>
 
-        <footer id="apply" class="glass-panel p-8 md:p-10 text-center reveal relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-t from-space-mid/40 to-transparent z-0"></div>
-            
-            <div class="relative z-10">
-                <h2 class="text-2xl md:text-3xl font-bold mb-4 text-white stagger-1">ลองเปลี่ยนอนาคต…เริ่มที่นี่</h2>
-                <p class="text-sm md:text-base text-text-muted font-light mb-10 max-w-2xl mx-auto stagger-2">
-                    มาร่วมเป็นส่วนหนึ่งของการสร้าง “Safe Space” เพื่อเยาวชนและครอบครัวไทยไปด้วยกัน
-                </p>
+        <footer id="apply" class="clay-panel p-8 md:p-12 text-center reveal">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-clay-main stagger-1">ลองเปลี่ยนอนาคต…เริ่มที่นี่</h2>
+            <p class="text-base md:text-lg text-clay-muted font-medium mb-12 max-w-2xl mx-auto stagger-2">
+                มาร่วมเป็นส่วนหนึ่งของการสร้าง “Safe Space” เพื่อเยาวชนและครอบครัวไทยไปด้วยกัน
+            </p>
 
-                <div class="flex flex-col md:flex-row justify-center items-stretch gap-8 md:gap-20 mb-10 stagger-3">
-                    <div class="flex flex-col items-center group">
-                        <p class="text-star-lavender text-xs md:text-sm font-medium mb-3 opacity-80">ยังไม่มีทีม? เข้า OpenChat เลย</p>
-                        <div class="bg-white p-3 rounded-2xl shadow-[0_0_20px_rgba(188,162,254,0.2)] border border-white/20 transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_30px_rgba(188,162,254,0.4)]">
-                            <img src="https://i.postimg.cc/3xtdG5pr/scu8.png" alt="OpenChat QR" class="w-28 h-28 md:w-40 md:h-40 object-cover rounded-xl grayscale-[0.5] group-hover:grayscale-0 transition-all">
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col items-center group">
-                        <p class="text-glow-pink text-xs md:text-sm font-medium mb-3">มีทีมแล้ว? รีบสมัครเลย!</p>
-                        <div class="bg-white p-3 rounded-2xl shadow-[0_0_30px_rgba(248,201,253,0.3)] border border-white/20 transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_40px_rgba(248,201,253,0.5)]">
-                            <img src="https://i.postimg.cc/3xtdG5pr/scu8.png" alt="Register QR" class="w-28 h-28 md:w-40 md:h-40 object-cover rounded-xl">
-                        </div>
+            <div class="flex flex-col md:flex-row justify-center items-stretch gap-8 md:gap-16 mb-12 stagger-3">
+                <div class="flex flex-col items-center">
+                    <p class="text-sm md:text-base font-bold mb-4 text-accent-alt">ยังไม่มีทีม? เข้า OpenChat เลย</p>
+                    <div class="clay-box p-4 md:p-5 transition-transform hover:scale-105">
+                        <img src="https://i.postimg.cc/3xtdG5pr/scu8.png" alt="OpenChat QR" class="w-32 h-32 md:w-40 md:h-40 object-cover rounded-2xl grayscale group-hover:grayscale-0 transition-all duration-300">
                     </div>
                 </div>
 
-                <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-10 stagger-4">
-                    <a href="https://line.me/ti/g2/YOUR_OPENCHAT_LINK" target="_blank" class="px-8 md:px-10 py-3 md:py-4 rounded-full border border-star-lavender/50 flex items-center justify-center font-medium transition-all hover:bg-white/10 text-text-muted hover:text-white w-full md:w-auto">
-                        เข้ากลุ่มเพื่อหาเพื่อนร่วมทีม
-                    </a>
-                    
-                    <a href="https://forms.gle/DDrgsvNWTfjHzvKK6" target="_blank" class="btn-primary px-12 md:px-16 py-3 md:py-4 text-base md:text-lg w-full md:w-auto shadow-[0_10px_25px_rgba(255,102,163,0.4)]">
-                        กรอกใบสมัครที่นี่
-                    </a>
+                <div class="flex flex-col items-center">
+                    <p class="text-sm md:text-base font-bold mb-4 text-accent">มีทีมแล้ว? รีบสมัครเลย!</p>
+                    <div class="clay-box p-4 md:p-5 transition-transform hover:scale-105">
+                        <img src="https://i.postimg.cc/3xtdG5pr/scu8.png" alt="Register QR" class="w-32 h-32 md:w-40 md:h-40 object-cover rounded-2xl">
+                    </div>
                 </div>
-
-                <div class="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-6 text-[10px] md:text-xs font-light text-text-muted border-t border-glass-border pt-6 mt-5">
-                    <a href="https://instagram.com/kmitl.caseclub" class="hover:text-glow-pink transition">IG : kmitl.caseclub</a>
-                    <span class="hidden md:inline opacity-30">/</span>
-                    <a href="https://facebook.com/KMITLCaseClub" class="hover:text-glow-pink transition">FB : KMITL Case Club</a>
-                    <span class="hidden md:inline opacity-30">/</span>
-                    <a href="mailto:k.engineeringcaseclub@gmail.com" class="hover:text-glow-pink transition">Email : k.engineeringcaseclub@gmail.com</a>
-                </div>
-                <div class="mt-4 text-[9px] md:text-[10px] text-star-lavender/50 font-light tracking-widest uppercase">KMITL Lifelong Learning Center</div>
             </div>
+
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-12 stagger-4 w-full md:w-auto mx-auto">
+                <a href="https://line.me/ti/g2/YOUR_OPENCHAT_LINK" target="_blank" class="clay-btn-outline w-full md:w-auto">
+                    เข้ากลุ่มเพื่อหาเพื่อนร่วมทีม
+                </a>
+                
+                <a href="https://forms.gle/DDrgsvNWTfjHzvKK6" target="_blank" class="clay-btn text-lg w-full md:w-auto px-16">
+                    กรอกใบสมัครที่นี่
+                </a>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-xs font-medium border-t-2 pt-8 mt-8 text-clay-muted" style="border-color: rgba(111, 0, 255, 0.15);">
+                <a href="https://instagram.com/kmitl.caseclub" class="hover:text-accent transition">IG : kmitl.caseclub</a>
+                <span class="hidden md:inline opacity-50">/</span>
+                <a href="https://facebook.com/KMITLCaseClub" class="hover:text-accent transition">FB : KMITL Case Club</a>
+                <span class="hidden md:inline opacity-50">/</span>
+                <a href="mailto:k.engineeringcaseclub@gmail.com" class="hover:text-accent transition">Email : k.engineeringcaseclub@gmail.com</a>
+            </div>
+            <div class="mt-6 text-[10px] font-bold tracking-widest uppercase opacity-80" style="color: var(--purp-500);">KMITL Case Club x B-Lab x CareerVisa</div>
         </footer>
 
     </div>
 
     <script>
-        // 1. Dynamic Tab Title
         let docTitle = document.title;
         document.addEventListener("visibilitychange", function() {
             if (document.hidden) {
@@ -469,7 +600,6 @@
             }
         });
 
-        // 2. Web Preloader Logic
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const preloader = document.getElementById('preloader');
@@ -478,14 +608,12 @@
             }, 1200); 
         });
 
-        // 3. Progress Bar
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             document.getElementById('progress-bar').style.width = (winScroll / height) * 100 + "%";
         });
 
-        // 4. Countdown Timer
         const targetDate = new Date("October 1, 2026 00:00:00").getTime();
         const updateCountdown = () => {
             const distance = targetDate - new Date().getTime();
@@ -498,35 +626,25 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // 5. Scroll Reveal
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.15 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // 6. Interactive Treasure Whale
         const whale = document.getElementById('space-whale');
         const whaleImg = document.getElementById('whale-img');
         let whaleCaught = false;
 
         function spawnWhale() {
             if(whaleCaught) return; 
-            
             whale.style.left = '-250px'; 
             whale.style.top = '30%'; 
             whale.style.transform = ''; 
-            
             whale.classList.remove('hidden');
             whale.style.animation = 'none';
             void whale.offsetWidth; 
-            
             whale.style.animation = 'whaleFlowAcross 35s linear forwards';
-            
-            setTimeout(() => {
-                if(!whaleCaught) {
-                    whale.classList.add('hidden');
-                }
-            }, 35000); 
+            setTimeout(() => { if(!whaleCaught) { whale.classList.add('hidden'); } }, 35000); 
         }
 
         setTimeout(spawnWhale, 3000);
@@ -535,27 +653,18 @@
         whale.addEventListener('click', () => {
             if(whaleCaught) return;
             whaleCaught = true;
-            
             const rect = whale.getBoundingClientRect();
-            
             whale.style.animation = 'none';
             whaleImg.style.animation = 'none'; 
-            
             whale.style.left = rect.left + 'px';
             whale.style.top = rect.top + 'px';
             whale.style.transform = 'none'; 
-            
             void whale.offsetWidth;
-            
             whale.style.animation = 'whaleRunAway 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards';
-            
             const popup = document.getElementById('secret-popup');
             popup.classList.add('show');
         });
 
-        /* =========================================
-           YouTube IFrame API 
-        ========================================= */
         let ytPlayer;
         let isPlaying = false;
         let isPlayerReady = false;
@@ -579,20 +688,20 @@
                     rel: 0,
                     autoplay: 0 
                 },
-                events: {
-                    'onReady': function(event) {
+                events: { 
+                    'onReady': function(event) { 
                         isPlayerReady = true; 
-                    }
+                        const icon = document.getElementById('music-icon');
+                        if(icon) icon.innerText = '▶️';
+                    } 
                 }
             });
         }
 
         function toggleMusic() {
             if (!isPlayerReady) return; 
-
             const hint = document.getElementById('music-hint');
             if (hint) hint.style.opacity = '0';
-
             const icon = document.getElementById('music-icon');
             if (isPlaying) { 
                 ytPlayer.pauseVideo(); 
