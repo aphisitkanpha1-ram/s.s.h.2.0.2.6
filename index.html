@@ -58,19 +58,19 @@
         body {
             background-color: var(--space-bg);
             background-image: 
-                url('https://i.postimg.cc/nczSZsmt/bv17.png'),
                 radial-gradient(circle at 20% 30%, var(--purp-900) 0%, transparent 50%),
                 radial-gradient(circle at 80% 70%, var(--purp-700) 0%, transparent 50%);
-            background-position: bottom center, top left, bottom right;
-            background-repeat: no-repeat, no-repeat, no-repeat;
-            background-size: 100% auto, auto, auto;
-            background-attachment: scroll, fixed, fixed;
+            background-attachment: fixed;
             color: var(--text-main);
             font-family: 'Kanit', sans-serif;
             overflow-x: hidden;
             margin: 0;
             scroll-behavior: smooth;
-            padding-bottom: 5rem;
+        }
+
+        /* Fix Navigation Offset */
+        section[id], div[id="criteria"] {
+            scroll-margin-top: 100px;
         }
 
         body::before {
@@ -137,12 +137,12 @@
         }
 
         .comet { 
-            position: fixed; width: 150px; height: 2px; 
+            position: fixed; height: 2px; 
             background: linear-gradient(90deg, transparent, var(--white-glow), transparent); 
             z-index: -2; opacity: 0; transform: rotate(-20deg); 
             animation: shoot 8s linear infinite; pointer-events: none; will-change: transform, opacity;
         }
-        .comet-1 { top: 20%; left: 80%; animation-delay: 2s; }
+        .comet-1 { top: 20%; left: 80%; width: 150px; animation-delay: 2s; }
         .comet-2 { top: 60%; left: 30%; width: 100px; animation-duration: 12s; animation-delay: 7s; background: linear-gradient(90deg, transparent, var(--purp-100), transparent); }
 
         @keyframes shoot { 
@@ -176,13 +176,13 @@
             0% { transform: translateX(-150px) translateY(0) rotate(2deg); } 
             33% { transform: translateX(35vw) translateY(20px) rotate(-1deg); } 
             66% { transform: translateX(75vw) translateY(-10px) rotate(1deg); } 
-            100% { transform: translateX(120vw) translateY(10px) rotate(0deg); } 
+            100% { transform: translateX(calc(100vw + 200px)) translateY(10px) rotate(0deg); } 
         }
         @keyframes whaleRunAway {
             0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
             8% { transform: translate(5px, -15px) scale(1.25) rotate(-5deg); opacity: 1; filter: drop-shadow(0 0 20px var(--white-glow)); } 
             20% { transform: translate(-25px, 20px) scale(1.1) rotate(-15deg); opacity: 1; } 
-            100% { transform: translate(150vw, -80vh) scale(0.4) rotate(25deg) scaleX(1.4); opacity: 0; filter: blur(3px); } 
+            100% { transform: translate(calc(100vw + 300px), -80vh) scale(0.4) rotate(25deg) scaleX(1.4); opacity: 0; filter: blur(3px); } 
         }
         @keyframes whaleBobbing {
             0% { transform: translateY(-12px) rotate(-2deg); }
@@ -230,7 +230,7 @@
             transition: all 0.3s ease;
         }
 
-        /* ปุ่มหลัก */
+        /* ปุ่มหลัก (ม่วงไล่ระดับ) */
         .clay-btn {
             display: inline-flex; align-items: center; justify-content: center; 
             padding: 16px 40px;
@@ -277,23 +277,23 @@
                 inset -4px -4px 10px rgba(216, 191, 216, 0.8);
         }
 
-        /* ปุ่มรอง (เข้ากลุ่ม) */
+        /* ปุ่มขอบม่วงเข้ม */
         .clay-btn-outline {
             display: inline-flex; align-items: center; justify-content: center; 
             padding: 16px 40px;
-            background-color: var(--purp-100); 
-            color: var(--purp-900); 
+            background-color: transparent; 
+            color: var(--purp-700); 
             font-weight: 700; font-size: 1.1rem;
             border-radius: 100px; 
-            border: 2px solid var(--purp-300);
+            border: 2px solid var(--purp-500);
             box-shadow: 0 4px 10px rgba(106, 13, 173, 0.1);
             transition: all 0.2s ease;
             cursor: pointer;
         }
         .clay-btn-outline:hover { 
-            background-color: var(--purp-300); 
-            color: var(--white-glow); 
-            border-color: var(--purp-500);
+            background-color: var(--purp-100); 
+            color: var(--purp-900); 
+            border-color: var(--purp-700);
             box-shadow: 0 4px 15px rgba(106, 13, 173, 0.2);
         }
 
@@ -332,7 +332,7 @@
         .faq-item[open] summary::after { transform: rotate(45deg); color: var(--purp-700); }
         .faq-content { padding: 0 24px 20px 24px; color: var(--clay-text-muted); line-height: 1.6; }
 
-        /* Gemini Star Bullet (ดาว 4 แฉก ไล่สีเกรเดียนต์ ม่วง-ชมพู-ขาว) */
+        /* Gemini Star Bullet */
         .bullet-star {
             position: relative;
             padding-left: 2.25rem;
@@ -367,22 +367,27 @@
         @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* =========================================
-           📱 Mobile Optimizations
+           📱 Mobile Optimizations (Anti-Lag)
         ========================================= */
         @media (max-width: 768px) {
-            body {
-                background-size: 150% auto, auto, auto;
-                padding-bottom: 2rem;
-            }
-
             table, thead, tbody, th, td, tr { display: block; }
             thead tr { position: absolute; top: -9999px; left: -9999px; }
             td { position: relative; padding-left: 40%; border-bottom: 1px solid rgba(0, 0, 0, 0.05);}
             td::before { position: absolute; top: 18px; left: 16px; width: 35%; font-weight: 600; font-size: 0.85rem; color: var(--purp-700); }
             td:nth-of-type(1)::before { content: "กิจกรรม"; } td:nth-of-type(2)::before { content: "วันที่/เวลา"; } td:nth-of-type(3)::before { content: "สถานที่"; }
             
+            /* Anti-Lag : ปิด Effect ที่ทำให้ Android กระตุก */
+            .blob { 
+                animation: none !important; 
+                mix-blend-mode: normal !important; 
+                filter: blur(50px) !important; 
+            }
+            .stars-bg, .comet { 
+                animation: none !important; 
+                display: none !important; 
+            }
             .blob-3 { display: none !important; }
-            .blob-1, .blob-2 { filter: blur(70px) !important; opacity: 0.2; }
+            .blob-1, .blob-2 { opacity: 0.2; }
             
             #music-btn { bottom: 20px !important; left: 16px !important; padding: 12px !important; border-radius: 50% !important; }
             #music-icon { width: 24px; height: 24px; font-size: 12px; }
@@ -433,7 +438,7 @@
     
     <div id="bgm-player" class="hidden"></div>
 
-    <nav class="fixed w-full top-0 z-50 clay-panel !rounded-none !border-x-0 !border-t-0 py-3 px-6 stagger-1 !shadow-sm">
+    <nav class="fixed w-full top-0 z-50 clay-panel !rounded-none !border-x-0 !border-t-0 py-2 px-4 md:py-3 md:px-6 stagger-1 !shadow-sm">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="hidden md:flex gap-8 text-sm font-medium">
                 <a href="#overview" class="text-clay-main hover:text-accent transition">เกี่ยวกับ</a>
@@ -441,12 +446,12 @@
                 <a href="#criteria" class="text-clay-main hover:text-accent transition">คุณสมบัติ</a>
                 <a href="#faq" class="text-clay-main hover:text-accent transition">คำถามที่พบบ่อย</a>
             </div>
-            <div class="flex items-center gap-2 p-2 px-4 clay-box !rounded-full ml-auto md:ml-0">
-                <img src="https://i.postimg.cc/NGRF4rTj/D9D2BEC5-6591-4AD5-82E1-1ED6E09F30EC.jpg" class="h-5 rounded-md" alt="KMITL Case Club">
+            <div class="flex items-center justify-center mx-auto md:mx-0 md:ml-auto gap-2 p-2 px-4 clay-box !rounded-full">
+                <img src="https://i.postimg.cc/NGRF4rTj/D9D2BEC5-6591-4AD5-82E1-1ED6E09F30EC.jpg" class="h-4 md:h-5 rounded-md" alt="KMITL Case Club">
                 <span class="text-[10px] text-clay-muted font-bold mx-1">x</span>
-                <img src="https://i.postimg.cc/fWdtrP49/Gemini-Generated-Image-8irjgs8irjgs8irj.png" class="h-5 rounded-md" alt="B-LAB">
+                <img src="https://i.postimg.cc/fWdtrP49/Gemini-Generated-Image-8irjgs8irjgs8irj.png" class="h-4 md:h-5 rounded-md" alt="B-LAB">
                 <span class="text-[10px] text-clay-muted font-bold mx-1">x</span>
-                <img src="https://i.postimg.cc/441ZyvVb/bv12.png" class="h-5 rounded-md" alt="CareerVisa">
+                <img src="https://i.postimg.cc/441ZyvVb/bv12.png" class="h-4 md:h-5 rounded-md" alt="CareerVisa">
             </div>
         </div>
     </nav>
@@ -478,7 +483,7 @@
         </div>
     </header>
 
-    <div class="max-w-6xl mx-auto px-4 md:px-6 pb-32 md:pb-40 space-y-16 md:space-y-24 relative z-10">
+    <div class="max-w-6xl mx-auto px-4 md:px-6 space-y-16 md:space-y-24 relative z-10">
         
         <section id="overview" class="clay-panel p-8 md:p-12 reveal" >
             <div class="flex items-center gap-4 mb-6">
@@ -555,7 +560,7 @@
             </div>
         </section>
 
-        <footer id="apply" class="clay-panel p-8 md:p-12 text-center reveal" style="background-color: rgba(248, 244, 250, 0.95);">
+        <section id="apply" class="clay-panel p-8 md:p-12 text-center reveal">
             <h2 class="text-3xl md:text-4xl font-bold mb-4 text-clay-main stagger-1">ลองเปลี่ยนอนาคต…เริ่มที่นี่</h2>
             <p class="text-base md:text-lg text-clay-muted font-medium mb-12 max-w-2xl mx-auto stagger-2">
                 มาร่วมเป็นส่วนหนึ่งของการสร้าง “Safe Space” เพื่อเยาวชนและครอบครัวไทยไปด้วยกัน
@@ -577,7 +582,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-12 stagger-4 w-full md:w-auto mx-auto">
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 stagger-4 w-full md:w-auto mx-auto">
                 <a href="https://line.me/ti/g2/YOUR_OPENCHAT_LINK" target="_blank" class="clay-btn-outline w-full md:w-auto">
                     เข้ากลุ่มเพื่อหาเพื่อนร่วมทีม
                 </a>
@@ -586,20 +591,32 @@
                     กรอกใบสมัครที่นี่
                 </a>
             </div>
-
-            <div class="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-xs font-medium border-t-2 pt-8 mt-8 text-clay-muted" style="border-color: rgba(111, 0, 255, 0.15);">
-                <a href="https://instagram.com/kmitl.caseclub" class="hover:text-accent transition">IG : kmitl.caseclub</a>
-                <span class="hidden md:inline opacity-50">/</span>
-                <a href="https://facebook.com/KMITLCaseClub" class="hover:text-accent transition">FB : KMITL Case Club</a>
-                <span class="hidden md:inline opacity-50">/</span>
-                <a href="mailto:k.engineeringcaseclub@gmail.com" class="hover:text-accent transition">Email : k.engineeringcaseclub@gmail.com</a>
-            </div>
-            <div class="mt-6 flex flex-col items-center gap-2">
-                <div class="text-[10px] font-light tracking-wide text-clay-muted opacity-80">&copy; 2026 Safe Space Hackathon. All rights reserved.</div>
-            </div>
-        </footer>
+        </section>
 
     </div>
+
+    <footer class="w-full clay-panel !rounded-none !border-x-0 !border-b-0 py-10 px-6 relative z-10 mt-20 text-center">
+        <div class="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-12 mb-8">
+            <a href="https://instagram.com/kmitl.caseclub" target="_blank" class="flex items-center gap-3 text-clay-muted hover:text-purp-700 transition">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                <span class="text-sm font-medium">IG : kmitl.caseclub</span>
+            </a>
+            <a href="https://facebook.com/KMITLCaseClub" target="_blank" class="flex items-center gap-3 text-clay-muted hover:text-purp-700 transition">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                <span class="text-sm font-medium">FB : KMITL Case Club</span>
+            </a>
+            <a href="mailto:k.engineeringcaseclub@gmail.com" class="flex items-center gap-3 text-clay-muted hover:text-purp-700 transition">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path d="M0 4v16h24V4H0zm22 2v1.811L12 14.053 2 7.811V6h20zm0 14H2V9.82l10 6.242 10-6.242V20z"/></svg>
+                <span class="text-sm font-medium">k.engineeringcaseclub@gmail.com</span>
+            </a>
+        </div>
+        <div class="text-[10px] md:text-xs font-bold tracking-widest uppercase opacity-80 text-purp-500 mb-3">
+            KMITL Case Club x B-Lab x CareerVisa
+        </div>
+        <div class="text-xs text-clay-muted opacity-60 font-medium">
+            &copy; 2026 Safe Space Hackathon. All rights reserved.
+        </div>
+    </footer>
 
     <script>
         let docTitle = document.title;
@@ -647,7 +664,7 @@
         let whaleCaught = false;
 
         function spawnWhale() {
-            if(whaleCaught) return; 
+            whaleCaught = false; 
             whale.style.left = '-250px'; 
             whale.style.top = '30%'; 
             whale.style.transform = ''; 
@@ -658,7 +675,7 @@
             setTimeout(() => { if(!whaleCaught) { whale.classList.add('hidden'); } }, 35000); 
         }
 
-        setTimeout(spawnWhale, 3000);
+        setTimeout(spawnWhale, 30000);
         setInterval(spawnWhale, 420000);
 
         whale.addEventListener('click', () => {
@@ -719,9 +736,8 @@
                 icon.innerText = '▶️'; 
             } else { 
                 if (!hasStarted) {
-                    const totalSongs = 15; 
-                    const randomIndex = Math.floor(Math.random() * totalSongs);
-                    ytPlayer.playVideoAt(randomIndex);
+                    ytPlayer.setShuffle(true);
+                    ytPlayer.playVideoAt(0);
                     hasStarted = true;
                 } else {
                     ytPlayer.playVideo(); 
@@ -730,6 +746,52 @@
             }
             isPlaying = !isPlaying;
         }
+
+        /* =========================================
+           Meteor Shower Logic (ทุกๆ 1 นาที)
+        ========================================= */
+        function triggerMeteorShower() {
+            // ข้ามการทำงานบนมือถือเพื่อป้องกันปัญหาเครื่องกระตุก (อิงจากจอเล็กกว่า 768px)
+            if (window.innerWidth <= 768) return;
+
+            // จำนวนดาวตกที่ต้องการสปอว์น 
+            const cometCount = 15; 
+
+            for (let i = 0; i < cometCount; i++) {
+                const comet = document.createElement('div');
+                comet.className = 'comet';
+                
+                // สุ่มค่าต่างๆ เพื่อให้ดาวตกดูเป็นธรรมชาติ
+                const topPos = Math.random() * 80; // สุ่มจุดเกิดแกน Y (0% - 80%)
+                const leftPos = 20 + Math.random() * 80; // สุ่มจุดเกิดแกน X (20% - 100%)
+                const widthVal = 50 + Math.random() * 150; // สุ่มความยาวหาง (50px - 200px)
+                const duration = 2 + Math.random() * 4; // สุ่มความเร็ว (2s - 6s)
+                const delay = Math.random() * 4; // สุ่มความหน่วงให้ทยอยออก (0s - 4s)
+
+                // ใส่ค่า CSS ลงไปในดาวตกแต่ละดวง
+                comet.style.top = `${topPos}%`;
+                comet.style.left = `${leftPos}%`;
+                comet.style.width = `${widthVal}px`;
+                comet.style.animationDuration = `${duration}s`;
+                comet.style.animationDelay = `${delay}s`;
+                comet.style.display = 'block';
+
+                // สุ่มสีให้มีทั้งสีขาวและสีม่วงสลับกัน
+                if(Math.random() > 0.5) {
+                    comet.style.background = 'linear-gradient(90deg, transparent, var(--purp-300), transparent)';
+                }
+
+                document.body.appendChild(comet);
+
+                // ตั้งเวลาลบดาวตกออกจากระบบเมื่อวิ่งจบ เพื่อคืนพื้นที่ RAM
+                setTimeout(() => {
+                    comet.remove();
+                }, (duration + delay) * 1000 + 1000);
+            }
+        }
+
+        // สั่งให้ฟังก์ชันทำงานทุกๆ 60,000 มิลลิวินาที (1 นาที)
+        setInterval(triggerMeteorShower, 60000);
     </script>
 </body>
 </html>
